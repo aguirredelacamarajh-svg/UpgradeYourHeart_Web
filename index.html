@@ -2235,15 +2235,7 @@
       letter-spacing: 0.1em;
     }
   </style>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-21XPY1M3QZ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-21XPY1M3QZ');
-  </script>
+  <!-- GA4 tag removed from this location (was duplicated). Single tag in <head> above. -->
 </head>
 
 <body>
@@ -2391,17 +2383,17 @@
       <div class="ticker-item"><em>4</em> dominios: vascular · metabólico · conductual · recuperación</div>
       <div class="ticker-item"><em>ESC 2021/2025</em> + <em>ACC/AHA 2026</em> · Guías de referencia</div>
       <div class="ticker-item">Herramienta educativa y orientativa · No sustituye diagnóstico médico</div>
-      <div class="ticker-item">Tus datos se procesan localmente · <em>Nada se envía a servidores</em></div>
+      <div class="ticker-item">Tus datos de salud se procesan localmente · <em>Nunca se envían a servidores</em></div>
       <div class="ticker-item">Creado por médicos para pacientes</div>
-      <div class="ticker-item"><em>Gratuita</em> · Sin registro · Sin cookies</div>
+      <div class="ticker-item"><em>Gratuita</em> · Sin registro</div>
       <!-- duplicate for seamless loop -->
       <div class="ticker-item"><em>18</em> variables de riesgo cardiovascular</div>
       <div class="ticker-item"><em>4</em> dominios: vascular · metabólico · conductual · recuperación</div>
       <div class="ticker-item"><em>ESC 2021/2025</em> + <em>ACC/AHA 2026</em> · Guías de referencia</div>
       <div class="ticker-item">Herramienta educativa y orientativa · No sustituye diagnóstico médico</div>
-      <div class="ticker-item">Tus datos se procesan localmente · <em>Nada se envía a servidores</em></div>
+      <div class="ticker-item">Tus datos de salud se procesan localmente · <em>Nunca se envían a servidores</em></div>
       <div class="ticker-item">Creado por médicos para pacientes</div>
-      <div class="ticker-item"><em>Gratuita</em> · Sin registro · Sin cookies</div>
+      <div class="ticker-item"><em>Gratuita</em> · Sin registro</div>
     </div>
   </div>
 
@@ -3109,14 +3101,14 @@
     <div class="footer-inner">
       <div style="display:flex; flex-direction:column; gap:8px;">
         <p class="footer-copy">© 2026 UpgradeYourHeart · Creado por médicos para pacientes.</p>
-        <p class="footer-copy">Founder: Dr. Jorge Aguirre de la Cámara | Mail: <a
-            href="mailto:aguirredelacamara.jh@gmail.com"
-            style="color:var(--dim); text-decoration:none;">aguirredelacamara.jh@gmail.com</a></p>
+        <p class="footer-copy">Founder: Dr. Jorge Aguirre de la Cámara | <a
+            href="#" onclick="openContactModal(event)"
+            style="color:var(--dim); text-decoration:none;">Contacto</a></p>
       </div>
       <p class="footer-note" style="max-width: 600px;">Herramienta educativa y orientativa. No sustituye el diagnóstico
         médico profesional. El autor se exime de cualquier responsabilidad médica, civil o penal derivada del uso de
         esta calculadora y sus resultados. Todo resultado es meramente estadístico. Consultá siempre con tu cardiólogo o
-        médico de cabecera antes de tomar cualquier decisión de salud. Ningún dato se transmite a servidores externos.
+        médico de cabecera antes de tomar cualquier decisión de salud. Ningún dato de salud se transmite a servidores externos. Este sitio utiliza Google Analytics con fines estadísticos.
       </p>
       <ul class="footer-links">
         <li><a href="#methodology">Metodología</a></li>
@@ -3136,7 +3128,7 @@
         <textarea id="contactQuestion" class="contact-textarea" placeholder="¿Cuál es tu pregunta?" required></textarea>
         <button type="submit" class="contact-btn" id="contactSubmitBtn">Enviar consulta</button>
         <div id="contactMsg" class="contact-msg"></div>
-        <div class="contact-note">Soportado por Supabase. Asegurate de crear la tabla "contact_messages".</div>
+        <div class="contact-note">Tu consulta se envía de forma segura. No compartimos tu email con terceros.</div>
       </form>
     </div>
   </div>
@@ -3161,19 +3153,22 @@
             prevenir</strong> ninguna enfermedad. Los resultados NO deben ser utilizados como base para decisiones
           clínicas sin la evaluación de un profesional médico cualificado. Consulte siempre con su cardiólogo o médico
           de cabecera antes de tomar decisiones relacionadas con su salud cardiovascular.</p>
-        <p style="margin-bottom:12px;"><strong>PRIVACIDAD Y DATOS</strong><br>Todo el procesamiento se realiza
+        <p style="margin-bottom:12px;"><strong>PRIVACIDAD Y DATOS</strong><br>Todo el procesamiento de datos de salud se realiza
           localmente en su navegador. Ningún dato de salud es transmitido, almacenado ni procesado en servidores
           externos. El único dato que se almacena externamente es el email de contacto si usted lo proporciona
-          voluntariamente a través del formulario opcional de sugerencias.</p>
+          voluntariamente a través del formulario opcional de sugerencias. Este sitio utiliza Google Analytics (GA4) con
+          fines estadísticos de uso; GA4 puede establecer cookies de navegación conforme a su propia política de privacidad.</p>
         <p style="margin-bottom:12px;"><strong>AUTOR</strong><br>Dr. Jorge Aguirre de la Cámara —
-          Cardiólogo<br>Contacto: aguirredelacamara.jh@gmail.com</p>
+          Cardiólogo<br>Contacto: a través del <a href="#" onclick="closeLegalModal(); setTimeout(()=>openContactModal(), 350); return false;" style="color:var(--accent);">formulario de consultas</a></p>
         <p style="color:var(--dim); font-size:0.7rem; font-family:'JetBrains Mono',monospace;">ÚLTIMA ACTUALIZACIÓN:
           MARZO 2026</p>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4"
+    integrity="sha384-zETTH+6IXxKQ6zbGcT6H6EDdnGaae9uhI8uO7doTJoNEmPGeTKVOe5S6/XybS9JH"
+    crossorigin="anonymous"></script>
   <script>
     // ══════════════════════════════════════════════
     // CURSOR
@@ -3967,8 +3962,14 @@
     async function submitOptin() {
       const email = document.getElementById('optinEmail').value.trim();
       const msg = document.getElementById('optinMsg');
-      if (!email || !email.includes('@')) {
+      if (!email || !email.includes('@') || email.length > 254) {
         msg.textContent = 'Ingresá un email válido.';
+        msg.style.color = 'var(--red)';
+        msg.style.display = 'block';
+        return;
+      }
+      if (isRateLimited('optin', 30000)) {
+        msg.textContent = 'Por favor, esperá 30 segundos antes de intentar de nuevo.';
         msg.style.color = 'var(--red)';
         msg.style.display = 'block';
         return;
@@ -4012,9 +4013,17 @@
     // ══════════════════════════════════════════════
     // SUPABASE CONTACT FORM
     // ══════════════════════════════════════════════
-    // REEMPLAZAR ESTAS VARIABLES CON LAS REALES DEL PROYECTO
     const SUPABASE_URL = 'https://qndsdanfwqjfmwoifsfy.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_RJJWmuHdmwFoE83bruhGhg_RCOO4oET';
+
+    // ── Client-side rate limiting ──
+    const _rateLimitMap = {};
+    function isRateLimited(action, cooldownMs = 30000) {
+      const now = Date.now();
+      if (_rateLimitMap[action] && (now - _rateLimitMap[action]) < cooldownMs) return true;
+      _rateLimitMap[action] = now;
+      return false;
+    }
 
     const contactModal = document.getElementById('contact-modal');
     function openContactModal(e) {
@@ -4039,7 +4048,19 @@
       const question = document.getElementById('contactQuestion').value.trim();
 
       if (!SUPABASE_URL || !SUPABASE_KEY) {
-        msg.textContent = 'Error: Debes configurar tu URL y Anon Key de Supabase en index.html.';
+        msg.textContent = 'Servicio de contacto no disponible en este momento.';
+        msg.className = 'contact-msg error';
+        return;
+      }
+
+      if (isRateLimited('contact', 30000)) {
+        msg.textContent = 'Por favor, esperá 30 segundos antes de enviar otra consulta.';
+        msg.className = 'contact-msg error';
+        return;
+      }
+
+      if (email.length > 254 || question.length > 2000) {
+        msg.textContent = 'El mensaje es demasiado largo. Máximo 2000 caracteres.';
         msg.className = 'contact-msg error';
         return;
       }
@@ -4050,7 +4071,6 @@
       try {
         const { createClient } = window.supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-        // Supone la existencia de una tabla "contact_messages" con columnas "email" y "question"
         const { error } = await _supabase.from('contact_messages').insert([{ email, question }]);
         if (error) throw error;
 
@@ -4060,7 +4080,6 @@
       } catch (err) {
         msg.textContent = 'Hubo un error al enviar. Por favor, intentá nuevamente.';
         msg.className = 'contact-msg error';
-        console.error(err);
       } finally {
         btn.textContent = 'Enviar consulta';
         btn.disabled = false;
