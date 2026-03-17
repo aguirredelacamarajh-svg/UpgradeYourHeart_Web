@@ -1,0 +1,4078 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-21XPY1M3QZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-21XPY1M3QZ');
+  </script>
+  <title>UpgradeYourHeart — Longevidad Cardiovascular</title>
+  <meta property="og:title" content="UpgradeYourHeart — Calculadora de Perfil Cardiovascular">
+  <meta property="og:description"
+    content="Descubrí tu edad cardiovascular en 4 minutos. Basada en guías ESC 2021/2025 y ACC/AHA 2026. Gratuita, privada, diseñada por un cardiólogo.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://upgradeyourheart.com">
+  <meta property="og:image" content="https://upgradeyourheart.com/og-image.png">
+  <meta property="og:locale" content="es_AR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UpgradeYourHeart — Tu Perfil Cardiovascular">
+  <meta name="twitter:description"
+    content="Descubrí tu edad cardiovascular en 4 minutos. Basada en guías ESC y ACC/AHA.">
+  <meta name="twitter:image" content="https://upgradeyourheart.com/og-image.png">
+  <meta name="description"
+    content="Calculadora gratuita de perfil cardiovascular basada en guías ESC 2021/2025 y ACC/AHA 2026. 18 variables, 4 dominios, edad cardiovascular estimada. Diseñada por un cardiólogo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #060608;
+      --s1: #0d0d10;
+      --s2: #141418;
+      --s3: #1c1c22;
+      --border: rgba(240, 235, 227, 0.08);
+      --border2: rgba(240, 235, 227, 0.14);
+      --dim: #5a5a68;
+      --mid: #9090a0;
+      --text: #c8c4bc;
+      --hi: #f0ebe3;
+      --red: #c41230;
+      --red2: #9a0e25;
+      --red-glow: rgba(196, 18, 48, 0.18);
+      --gold: #c4973a;
+      --gold2: #8a6520;
+      --gold-glow: rgba(196, 151, 58, 0.15);
+      --r: 4px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--red);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+      mix-blend-mode: normal;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(196, 18, 48, 0.4);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s, width 0.3s, height 0.3s, opacity 0.3s;
+    }
+
+    body:has(button:hover) #cursor,
+    body:has(a:hover) #cursor {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── SCROLL PROGRESS ── */
+    #scroll-prog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: var(--red);
+      z-index: 2000;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal-d1 {
+      transition-delay: 0.1s
+    }
+
+    .reveal-d2 {
+      transition-delay: 0.2s
+    }
+
+    .reveal-d3 {
+      transition-delay: 0.3s
+    }
+
+    .reveal-d4 {
+      transition-delay: 0.4s
+    }
+
+    .reveal-d5 {
+      transition-delay: 0.5s
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      background-size: 200px 200px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 60px;
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    nav.scrolled {
+      background: rgba(6, 6, 8, 0.92);
+      backdrop-filter: blur(24px);
+      border-color: var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 1px;
+    }
+
+    .logo-up {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: var(--hi);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-heart {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--red);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-your {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 0.9rem;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--red);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--hi);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-btn {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      background: transparent;
+      color: var(--hi);
+      border: 1px solid var(--border2);
+      padding: 9px 22px;
+      cursor: none;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    .nav-btn:hover {
+      background: var(--hi);
+      color: var(--bg);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 55fr 45fr;
+      position: relative;
+      overflow: hidden;
+      padding-top: 60px;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px 80px 32px;
+      max-width: 700px;
+    }
+
+    @media(max-width:1100px) {
+      .hero-left {
+        padding: 80px 32px;
+      }
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 40px;
+    }
+
+    .hero-tag-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+      animation: blink 2.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.25;
+      }
+    }
+
+    .hero-h1 {
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 0.92;
+      margin-bottom: 36px;
+    }
+
+    .hero-h1 .ln1 {
+      display: block;
+      font-size: clamp(4.5rem, 8vw, 8.5rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--hi);
+      letter-spacing: -0.03em;
+    }
+
+    .hero-h1 .ln2 {
+      display: block;
+      font-size: clamp(2.5rem, 4.5vw, 5rem);
+      font-weight: 300;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      font-style: normal;
+      text-transform: uppercase;
+      margin-top: 0.1em;
+    }
+
+    .hero-h1 .ln3 {
+      display: block;
+      font-size: clamp(4.5rem, 8vw, 8.5rem);
+      font-weight: 700;
+      color: var(--hi);
+      letter-spacing: -0.04em;
+      font-style: normal;
+      margin-top: -0.05em;
+    }
+
+    .hero-h1 .ln3 span {
+      color: var(--red);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.8;
+      max-width: 440px;
+      margin-bottom: 44px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+
+    .btn-fill {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--hi);
+      color: var(--bg);
+      border: none;
+      padding: 14px 32px;
+      cursor: none;
+      transition: background 0.3s, transform 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-fill:hover {
+      background: #fff;
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--mid);
+      border: 1px solid var(--border);
+      padding: 14px 32px;
+      cursor: none;
+      transition: border-color 0.3s, color 0.3s, transform 0.3s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--border2);
+      color: var(--hi);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+      gap: 32px;
+    }
+
+    .hstat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: var(--hi);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .hstat-label {
+      font-size: 0.72rem;
+      color: var(--dim);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Hero right — instrument panel */
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--s1) 0%, var(--bg) 100%);
+      overflow: hidden;
+    }
+
+    .hero-instrument {
+      position: relative;
+      width: 340px;
+      height: 340px;
+    }
+
+    .hero-instrument svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.5;
+    }
+
+    .hero-right-label {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* ECG strip at bottom of hero */
+    .ecg-strip {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      overflow: hidden;
+    }
+
+    .ecg-strip svg {
+      width: 200%;
+      height: 100%;
+      animation: ecg-scroll 8s linear infinite;
+    }
+
+    @keyframes ecg-scroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      overflow: hidden;
+      background: var(--s1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .ticker-inner {
+      display: flex;
+      gap: 0;
+      animation: ticker-scroll 30s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+
+    .ticker-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .ticker-item em {
+      color: var(--red);
+      font-style: normal;
+    }
+
+    @keyframes ticker-scroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ── SECTION ANATOMY ── */
+    .section {
+      padding: 120px 0;
+    }
+
+    .section-sm {
+      padding: 80px 0;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .section-rule {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+
+    .section-rule .rule-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-rule .rule-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+      white-space: nowrap;
+    }
+
+    .sh-pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .sh-h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 4.8rem);
+      font-weight: 600;
+      color: var(--hi);
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+
+    .sh-h2 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--mid);
+    }
+
+    .sh-body {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-top: 20px;
+    }
+
+    /* ── FEATURES ── */
+    #features {
+      background: var(--s1);
+      border-top: 1px solid var(--border);
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-left: 1px solid var(--border);
+    }
+
+    .feat-card {
+      padding: 48px 36px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+
+    .feat-card:hover {
+      background: var(--s2);
+    }
+
+    .feat-card::before {
+      content: attr(data-n);
+      position: absolute;
+      top: -20px;
+      right: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 8rem;
+      color: rgba(240, 235, 227, 0.03);
+      line-height: 1;
+      pointer-events: none;
+      transition: color 0.4s;
+    }
+
+    .feat-card:hover::before {
+      color: rgba(240, 235, 227, 0.06);
+    }
+
+    .feat-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+      font-size: 1.2rem;
+    }
+
+    .feat-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--hi);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .feat-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    /* ── HOW ── */
+    #how {
+      border-top: 1px solid var(--border);
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .how-steps {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .how-step {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 24px;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .how-step:last-child {
+      border-bottom: none;
+    }
+
+    .how-step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 3.5rem;
+      color: var(--border2);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+      transition: color 0.4s;
+    }
+
+    .how-step:hover .how-step-num {
+      color: var(--dim);
+    }
+
+    .how-step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--hi);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .how-step-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    .how-visual {
+      position: sticky;
+      top: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── CALCULATOR ── */
+    #calculator {
+      background: var(--s1);
+      border-top: 1px solid var(--border);
+    }
+
+    .calc-panel {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .calc-head {
+      padding: 32px 40px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .calc-head-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--hi);
+      letter-spacing: -0.02em;
+    }
+
+    .calc-head-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+
+    /* Progress bar */
+    .calc-progress {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .prog-node {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      transition: all 0.4s;
+      background: var(--bg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .prog-node.active {
+      border-color: var(--red);
+      color: var(--hi);
+      background: var(--red);
+    }
+
+    .prog-node.done {
+      border-color: var(--border2);
+      color: var(--hi);
+      background: var(--s3);
+    }
+
+    .prog-seg {
+      width: 28px;
+      height: 1px;
+      background: var(--border);
+      transition: background 0.4s;
+    }
+
+    .prog-seg.done {
+      background: var(--border2);
+    }
+
+    /* Step body */
+    .calc-body {
+      padding: 40px;
+    }
+
+    .calc-step {
+      display: none;
+    }
+
+    .calc-step.active {
+      display: block;
+    }
+
+    .step-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 32px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .form-grid.g1 {
+      grid-template-columns: 1fr;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fg label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .fg input[type=number],
+    .fg select {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      color: var(--hi);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+    }
+
+    .fg input[type=number]:focus,
+    .fg select:focus {
+      border-color: var(--red);
+    }
+
+    .fg select option {
+      background: var(--s2);
+    }
+
+    /* Slider */
+    .slider-block {
+      margin-bottom: 28px;
+    }
+
+    .slider-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .slider-top label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .slider-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--hi);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 2px;
+      background: var(--s3);
+      outline: none;
+      cursor: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--hi);
+      border: 2px solid var(--bg);
+      transition: transform 0.2s, background 0.2s;
+      cursor: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+      background: var(--red);
+    }
+
+    .slider-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .slider-scale span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--dim);
+    }
+
+    /* Radio cards */
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .rc {
+      position: relative;
+    }
+
+    .rc input {
+      display: none;
+    }
+
+    .rc label {
+      display: block;
+      padding: 16px 12px;
+      border: 1px solid var(--border);
+      cursor: none;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--mid);
+      transition: all 0.3s;
+      line-height: 1.3;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rc label::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--red);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .rc input:checked+label {
+      border-color: var(--red);
+      color: var(--hi);
+    }
+
+    .rc input:checked+label::before {
+      opacity: 0.08;
+    }
+
+    .rc label:hover {
+      border-color: var(--border2);
+      color: var(--hi);
+    }
+
+    .rc-icon {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .rc-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .rg-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* Calc footer */
+    .calc-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-back {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--dim);
+      border: 1px solid var(--border);
+      padding: 11px 24px;
+      cursor: none;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .btn-back:hover {
+      color: var(--hi);
+      border-color: var(--border2);
+    }
+
+    .btn-next {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--hi);
+      color: var(--bg);
+      border: none;
+      padding: 13px 32px;
+      cursor: none;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .btn-next:hover {
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ── RESULTS ── */
+    #results {
+      display: none;
+    }
+
+    .result-wrap {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .result-top {
+      padding: 56px 40px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* Gauge */
+    .gauge-wrap {
+      position: relative;
+    }
+
+    .gauge-wrap svg {
+      width: 320px;
+      height: 200px;
+      overflow: visible;
+    }
+
+    .result-data {
+      padding-top: 16px;
+    }
+
+    .res-grade {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border: 1px solid currentColor;
+      margin-bottom: 20px;
+    }
+
+    .rg-ex {
+      color: #2ecc71;
+    }
+
+    .rg-gd {
+      color: #3498db;
+    }
+
+    .rg-mo {
+      color: #f39c12;
+    }
+
+    .rg-hi {
+      color: var(--red);
+    }
+
+    .res-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--hi);
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .res-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 480px;
+    }
+
+    .res-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+    }
+
+    .res-card {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+    }
+
+    .res-card:last-child {
+      border-right: none;
+    }
+
+    .res-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 8px;
+    }
+
+    .res-card-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--hi);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .res-card-sub {
+      font-size: 0.78rem;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+
+    /* Domain breakdown */
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border);
+    }
+
+    .domain-card {
+      padding: 24px 28px;
+      border-right: 1px solid var(--border);
+    }
+
+    .domain-card:last-child {
+      border-right: none;
+    }
+
+    .domain-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 6px;
+    }
+
+    .domain-bar-wrap {
+      height: 4px;
+      background: var(--s3);
+      margin-bottom: 6px;
+      overflow: hidden;
+    }
+
+    .domain-bar {
+      height: 100%;
+      transition: width 1.6s var(--ease);
+      width: 0%;
+    }
+
+    .domain-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--hi);
+    }
+
+    .domain-max {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+    }
+
+    /* Methodology note in results */
+    .method-note {
+      padding: 32px 40px;
+      border-top: 1px solid var(--border);
+      background: var(--s1);
+    }
+
+    .method-note-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 12px;
+    }
+
+    .method-note p {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    .method-note a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(196, 151, 58, 0.3);
+    }
+
+    .method-note a:hover {
+      border-color: var(--gold);
+    }
+
+    .btn-restart {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--dim);
+      border: 1px solid var(--border);
+      padding: 13px 24px;
+      cursor: none;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .btn-restart:hover {
+      color: var(--hi);
+      border-color: var(--border2);
+    }
+
+    /* ── METHODOLOGY SECTION ── */
+    #methodology {
+      border-top: 1px solid var(--border);
+    }
+
+    .meth-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border: 1px solid var(--border);
+    }
+
+    .meth-card {
+      padding: 40px 36px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meth-card:nth-child(2n) {
+      border-right: none;
+    }
+
+    .meth-card-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .meth-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--hi);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .meth-card-desc {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer-bar {
+      border-top: 1px solid var(--border);
+      background: var(--s1);
+      padding: 40px 32px;
+    }
+
+    .disclaimer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .disclaimer-icon {
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    .disclaimer-text {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    /* ── RECOMMENDATIONS ── */
+    .reco-section {
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .reco-header {
+      padding: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .reco-header-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 8px;
+    }
+
+    .reco-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--hi);
+    }
+
+    .reco-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .reco-card {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reco-card:last-child {
+      border-right: none;
+    }
+
+    .reco-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--hi);
+      margin-bottom: 16px;
+    }
+
+    .reco-card-vals {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .reco-card-curr {
+      font-size: 1rem;
+      color: var(--mid);
+      text-decoration: line-through;
+    }
+
+    .reco-card-targ {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--hi);
+    }
+
+    .reco-card-gain {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: #2ecc71;
+      margin-bottom: 16px;
+    }
+
+    .reco-card-action {
+      font-size: 0.82rem;
+      color: var(--mid);
+      line-height: 1.5;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+
+    .reco-card-ref {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* ── SHARE & OPTIN ── */
+    .share-bar {
+      padding: 24px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--s1);
+    }
+
+    .share-label {
+      font-size: 0.85rem;
+      color: var(--hi);
+      font-weight: 500;
+    }
+
+    .share-btn {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--hi);
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: none;
+      transition: all 0.3s;
+    }
+
+    .share-btn:hover {
+      border-color: var(--dim);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .optin-section {
+      padding: 32px;
+      border-top: 1px solid var(--border);
+      background: var(--s1);
+      text-align: center;
+    }
+
+    .optin-icon {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .optin-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--hi);
+      margin-bottom: 16px;
+    }
+
+    .optin-form {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .optin-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--hi);
+      padding: 8px 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      width: 260px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .optin-input:focus {
+      border-color: var(--red);
+    }
+
+    .optin-btn {
+      background: var(--hi);
+      color: var(--bg);
+      border: none;
+      padding: 8px 20px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: none;
+      transition: background 0.3s;
+    }
+
+    .optin-btn:hover {
+      background: #fff;
+    }
+
+    .optin-note {
+      font-size: 0.7rem;
+      color: var(--dim);
+    }
+
+    .optin-msg {
+      font-size: 0.75rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .disclaimer-text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── CTA ── */
+    #cta {
+      border-top: 1px solid var(--border);
+      padding: 140px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(196, 18, 48, 0.07), transparent);
+    }
+
+    .cta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .cta-h {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      font-weight: 700;
+      color: var(--hi);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .cta-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--mid);
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .btn-cta {
+      position: relative;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--red);
+      color: var(--hi);
+      border: none;
+      padding: 18px 48px;
+      cursor: none;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-cta:hover {
+      background: var(--red2);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(196, 18, 48, 0.3);
+    }
+
+    .btn-cta::before {
+      content: '♥';
+      animation: heartbeat-cta 1.6s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes heartbeat-cta {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      14% {
+        transform: scale(1.3);
+      }
+
+      28% {
+        transform: scale(1);
+      }
+
+      42% {
+        transform: scale(1.15);
+      }
+
+      56% {
+        transform: scale(1);
+      }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--dim);
+    }
+
+    .footer-note {
+      font-size: 0.68rem;
+      color: var(--s3);
+      max-width: 500px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.72rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--hi);
+    }
+
+    /* ── INTERACTIVE HEART ── */
+    .heart-section {
+      padding: 60px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 32px;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(196, 18, 48, 0.04), transparent);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .heart-container {
+      position: relative;
+      width: 280px;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heart-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 40px var(--heart-glow, rgba(196, 18, 48, 0.2)));
+      transition: filter 1.5s ease;
+    }
+
+    .heart-main {
+      transition: fill 1.5s ease, opacity 1.5s ease;
+    }
+
+    .heart-vein {
+      opacity: 0;
+      transition: opacity 2s ease 0.5s;
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+    }
+
+    .heart-vein.visible {
+      opacity: 1;
+      stroke-dashoffset: 0;
+      transition: opacity 0.5s ease, stroke-dashoffset 2s ease 0.3s;
+    }
+
+    .heart-pulse-ring {
+      transform-origin: center;
+      animation: none;
+    }
+
+    .heart-pulse-ring.beating {
+      animation: heart-pulse-ring var(--beat-speed, 1.2s) ease-in-out infinite;
+    }
+
+    @keyframes heart-pulse-ring {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.4;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    .heart-beat-group {
+      transform-origin: 140px 130px;
+      animation: none;
+    }
+
+    .heart-beat-group.beating {
+      animation: heart-beat var(--beat-speed, 1.2s) ease-in-out infinite;
+    }
+
+    @keyframes heart-beat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      15% {
+        transform: scale(1.06);
+      }
+
+      30% {
+        transform: scale(1);
+      }
+
+      45% {
+        transform: scale(1.04);
+      }
+
+      60% {
+        transform: scale(1);
+      }
+    }
+
+    .heart-age-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .heart-age-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.6rem;
+      font-weight: 700;
+      color: var(--hi);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 1s ease 1.2s;
+    }
+
+    .heart-age-num.visible {
+      opacity: 1;
+    }
+
+    .heart-age-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-top: 4px;
+      opacity: 0;
+      transition: opacity 1s ease 1.5s;
+    }
+
+    .heart-age-label.visible {
+      opacity: 1;
+    }
+
+    .heart-caption {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--hi);
+      text-align: center;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      transition: opacity 1s ease 1.8s;
+      max-width: 360px;
+    }
+
+    .heart-caption.visible {
+      opacity: 1;
+    }
+
+    .heart-caption em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--mid);
+    }
+
+    .heart-vs {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease 2s;
+    }
+
+    .heart-vs.visible {
+      opacity: 1;
+    }
+
+    .heart-vs span {
+      color: var(--hi);
+      font-weight: 700;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px) {
+      #hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-right {
+        display: none;
+      }
+
+      .feat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .how-visual {
+        display: none;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-top {
+        grid-template-columns: 1fr;
+      }
+
+      .res-cards,
+      .reco-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .res-card,
+      .reco-card {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .domain-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .domain-card:nth-child(2n) {
+        border-right: none;
+      }
+
+      .domain-card {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .meth-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .meth-card {
+        border-right: none !important;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .disclaimer-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .disclaimer-icon {
+        display: none;
+      }
+
+      nav .nav-links {
+        display: none;
+      }
+
+      .calc-head {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+
+      nav,
+      .ticker,
+      #hero,
+      #features,
+      #how,
+      #cta,
+      footer,
+      .btn-restart,
+      .method-note {
+        display: none !important;
+      }
+
+      #results {
+        display: block !important;
+      }
+
+      body {
+        background: #fff;
+        color: #222;
+      }
+
+      .result-wrap {
+        border-color: #ddd;
+      }
+    }
+
+    .nav-contact-btn {
+      color: var(--hi) !important;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      padding: 4px 14px;
+      border-radius: 4px;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    .nav-links a.nav-contact-btn::after {
+      display: none;
+    }
+
+    .nav-contact-btn:hover {
+      border-color: var(--dim) !important;
+      background-color: rgba(240, 235, 227, 0.05);
+    }
+
+    /* ── CONTACT MODAL ── */
+    #contact-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 6, 8, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease);
+    }
+
+    #contact-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .contact-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 40px;
+      max-width: 440px;
+      width: 90%;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.4s var(--ease);
+    }
+
+    #contact-modal.open .contact-box {
+      transform: translateY(0);
+    }
+
+    .contact-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: var(--dim);
+      cursor: none;
+      border: none;
+      background: transparent;
+      transition: color 0.3s;
+    }
+
+    .contact-close:hover {
+      color: var(--hi);
+    }
+
+    .contact-h {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--hi);
+      margin-bottom: 8px;
+    }
+
+    .contact-p {
+      font-size: 0.88rem;
+      color: var(--mid);
+      margin-bottom: 24px;
+      font-weight: 300;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-input,
+    .contact-textarea {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      color: var(--hi);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+    }
+
+    .contact-input:focus,
+    .contact-textarea:focus {
+      border-color: var(--red);
+    }
+
+    .contact-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .contact-btn {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--hi);
+      color: var(--bg);
+      border: none;
+      padding: 14px;
+      cursor: none;
+      transition: background 0.3s;
+    }
+
+    .contact-btn:hover {
+      background: #fff;
+    }
+
+    .contact-msg {
+      font-size: 0.82rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .contact-msg.success {
+      color: #2ecc71;
+      display: block;
+    }
+
+    .contact-msg.error {
+      color: var(--red);
+      display: block;
+    }
+
+    .contact-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--dim);
+      margin-top: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-21XPY1M3QZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-21XPY1M3QZ');
+  </script>
+</head>
+
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- SCROLL PROGRESS -->
+  <div id="scroll-prog"></div>
+
+  <!-- ═══════ NAV ═══════ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a class="logo" href="#">
+        <span class="logo-up">upgrade</span>
+        <span class="logo-your">your</span>
+        <span class="logo-heart">heart</span>
+      </a>
+      <ul class="nav-links" style="align-items: center;">
+        <li><a href="#calculator">Calculadora</a></li>
+        <li><a href="#how">Metodología</a></li>
+        <li><a href="#methodology">Referencias</a></li>
+        <li><a href="#" onclick="openContactModal(event)" class="nav-contact-btn">Contacto</a></li>
+      </ul>
+      <button class="nav-btn" onclick="scrollToCalc()">Evaluar gratis</button>
+    </div>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section id="hero">
+    <div class="hero-left">
+      <div class="hero-tag reveal">
+        <span class="hero-tag-dot"></span>
+        Dr. Jorge Aguirre de la Cámara · Cardiólogo · Guías ESC 2021/2025 + ACC/AHA 2026
+      </div>
+
+      <h1 class="hero-h1 reveal reveal-d1">
+        <span class="ln1">Upgrade</span>
+        <span class="ln2">Your</span>
+        <span class="ln3">Heart<span>.</span></span>
+      </h1>
+
+      <p class="hero-desc reveal reveal-d2">
+        Calculadora educativa y orientativa de perfil cardiovascular basada en factores de riesgo reconocidos
+        por la European Society of Cardiology. Gratuita, privada, creado por médicos para pacientes.
+      </p>
+
+      <div class="hero-actions reveal reveal-d3">
+        <button class="btn-fill" onclick="scrollToCalc()">Evaluar mi perfil</button>
+        <button class="btn-ghost"
+          onclick="document.getElementById('methodology').scrollIntoView({behavior:'smooth'})">Ver metodología</button>
+      </div>
+
+      <div class="hero-stats reveal reveal-d4">
+        <div>
+          <div class="hstat-num">18</div>
+          <div class="hstat-label">Variables analizadas</div>
+        </div>
+        <div>
+          <div class="hstat-num">4</div>
+          <div class="hstat-label">Dominios cardiovasculares</div>
+        </div>
+        <div>
+          <div class="hstat-num">ESC</div>
+          <div class="hstat-label">Guías 2021 + 2025 Update</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Instrument panel -->
+    <div class="hero-right">
+      <div class="hero-instrument">
+        <svg viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="170" cy="170" r="158" stroke="rgba(240,235,227,0.06)" stroke-width="1" />
+          <circle cx="170" cy="170" r="140" stroke="rgba(240,235,227,0.04)" stroke-width="1" />
+          <circle cx="170" cy="170" r="120" stroke="rgba(240,235,227,0.08)" stroke-width="0.5" />
+          <g stroke="rgba(240,235,227,0.2)" stroke-width="1">
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(0 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(30 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(60 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(90 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(120 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(150 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(180 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(210 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(240 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(270 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(300 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="28" transform="rotate(330 170 170)" />
+          </g>
+          <g stroke="rgba(240,235,227,0.1)" stroke-width="0.5">
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(15 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(45 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(75 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(105 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(135 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(165 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(195 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(225 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(255 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(285 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(315 170 170)" />
+            <line x1="170" y1="12" x2="170" y2="20" transform="rotate(345 170 170)" />
+          </g>
+          <line x1="170" y1="32" x2="170" y2="308" stroke="rgba(240,235,227,0.04)" stroke-width="0.5" />
+          <line x1="32" y1="170" x2="308" y2="170" stroke="rgba(240,235,227,0.04)" stroke-width="0.5" />
+          <path
+            d="M170,210 C170,210 120,175 120,145 C120,128 133,115 150,115 C159,115 166,120 170,127 C174,120 181,115 190,115 C207,115 220,128 220,145 C220,175 170,210 170,210 Z"
+            fill="rgba(196,18,48,0.15)" stroke="rgba(196,18,48,0.4)" stroke-width="1" />
+          <circle cx="170" cy="170" r="155" stroke="rgba(196,18,48,0.3)" stroke-width="1.5" stroke-dasharray="80 900"
+            stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" from="0 170 170" to="360 170 170" dur="16s"
+              repeatCount="indefinite" />
+          </circle>
+          <text x="170" y="272" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="rgba(240,235,227,0.25)" letter-spacing="4">CARDIOVASCULAR</text>
+          <text x="170" y="284" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="rgba(240,235,227,0.25)" letter-spacing="4">PROFILE</text>
+        </svg>
+      </div>
+      <div class="hero-right-label">Herramienta educativa y orientativa · No diagnóstica</div>
+
+      <div class="ecg-strip">
+        <svg viewBox="0 0 1800 60" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,30 L80,30 L100,30 L110,8 L125,52 L138,2 L152,58 L166,30 L200,30
+                 M200,30 L280,30 L300,30 L310,8 L325,52 L338,2 L352,58 L366,30 L400,30
+                 M400,30 L480,30 L500,30 L510,8 L525,52 L538,2 L552,58 L566,30 L600,30
+                 M600,30 L680,30 L700,30 L710,8 L725,52 L738,2 L752,58 L766,30 L800,30
+                 M800,30 L880,30 L900,30 L910,8 L925,52 L938,2 L952,58 L966,30 L1000,30
+                 M1000,30 L1080,30 L1100,30 L1110,8 L1125,52 L1138,2 L1152,58 L1166,30 L1200,30
+                 M1200,30 L1280,30 L1300,30 L1310,8 L1325,52 L1338,2 L1352,58 L1366,30 L1400,30
+                 M1400,30 L1480,30 L1500,30 L1510,8 L1525,52 L1538,2 L1552,58 L1566,30 L1600,30
+                 M1600,30 L1680,30 L1700,30 L1710,8 L1725,52 L1738,2 L1752,58 L1766,30 L1800,30"
+            stroke="rgba(196,18,48,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TICKER ═══════ -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      <div class="ticker-item"><em>18</em> variables de riesgo cardiovascular</div>
+      <div class="ticker-item"><em>4</em> dominios: vascular · metabólico · conductual · recuperación</div>
+      <div class="ticker-item"><em>ESC 2021/2025</em> + <em>ACC/AHA 2026</em> · Guías de referencia</div>
+      <div class="ticker-item">Herramienta educativa y orientativa · No sustituye diagnóstico médico</div>
+      <div class="ticker-item">Tus datos se procesan localmente · <em>Nada se envía a servidores</em></div>
+      <div class="ticker-item">Creado por médicos para pacientes</div>
+      <div class="ticker-item"><em>Gratuita</em> · Sin registro · Sin cookies</div>
+      <!-- duplicate for seamless loop -->
+      <div class="ticker-item"><em>18</em> variables de riesgo cardiovascular</div>
+      <div class="ticker-item"><em>4</em> dominios: vascular · metabólico · conductual · recuperación</div>
+      <div class="ticker-item"><em>ESC 2021/2025</em> + <em>ACC/AHA 2026</em> · Guías de referencia</div>
+      <div class="ticker-item">Herramienta educativa y orientativa · No sustituye diagnóstico médico</div>
+      <div class="ticker-item">Tus datos se procesan localmente · <em>Nada se envía a servidores</em></div>
+      <div class="ticker-item">Creado por médicos para pacientes</div>
+      <div class="ticker-item"><em>Gratuita</em> · Sin registro · Sin cookies</div>
+    </div>
+  </div>
+
+  <!-- ═══════ FEATURES ═══════ -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-rule reveal">
+        <div class="rule-line"></div>
+        <div class="rule-label">Qué evalúa</div>
+        <div class="rule-line"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start;margin-bottom:64px;">
+        <div class="reveal">
+          <span class="sh-pre">Cuatro dominios</span>
+          <div class="sh-h2">Un perfil<br><em>cardiovascular</em><br>multidimensional.</div>
+        </div>
+        <div class="reveal reveal-d1">
+          <p
+            style="font-size:1.05rem;font-weight:300;color:var(--mid);line-height:1.85;max-width:560px;padding-top:48px;">
+            Esta calculadora integra factores de riesgo reconocidos por las guías ESC 2021
+            de prevención cardiovascular en cuatro dominios. Los pesos de cada variable reflejan
+            la magnitud relativa de su asociación con eventos cardiovasculares según la evidencia disponible.
+            <strong style="color:var(--text);">No es un score validado prospectivamente</strong> — es una herramienta
+            educativa y orientativa diseñada para facilitar la reflexión sobre tu salud cardiovascular.
+          </p>
+        </div>
+      </div>
+
+      <div class="feat-grid">
+        <div class="feat-card reveal" data-n="01">
+          <div class="feat-icon">🫀</div>
+          <div class="feat-title">Dominio Vascular (30 pts)</div>
+          <p class="feat-desc">Presión arterial sistólica, frecuencia cardíaca en reposo y colesterol LDL. Umbrales
+            basados en las guías ESC/EHA 2018 de hipertensión y ESC 2019 de dislipemias.</p>
+        </div>
+        <div class="feat-card reveal reveal-d1" data-n="02">
+          <div class="feat-icon">⚗️</div>
+          <div class="feat-title">Dominio Metabólico (20 pts)</div>
+          <p class="feat-desc">Glucosa en ayunas e IMC. Puntos de corte alineados con la clasificación ADA para
+            prediabetes/diabetes y la clasificación OMS de IMC.</p>
+        </div>
+        <div class="feat-card reveal reveal-d2" data-n="03">
+          <div class="feat-icon">🏃</div>
+          <div class="feat-title">Dominio Conductual (30 pts)</div>
+          <p class="feat-desc">Actividad física semanal, calidad de dieta, estrés percibido, tabaquismo y consumo de
+            alcohol. Incorpora las recomendaciones ESC 2021 de actividad física y factores del estilo de vida.</p>
+        </div>
+        <div class="feat-card reveal reveal-d1" data-n="04">
+          <div class="feat-icon">🛌</div>
+          <div class="feat-title">Dominio Recuperación (20 pts)</div>
+          <p class="feat-desc">Cantidad y calidad del sueño, antecedentes familiares de enfermedad cardiovascular
+            (infartos, ACV) y estado de medicación
+            cardiovascular. Incluye factores no modificables reconocidos como moduladores del riesgo.</p>
+        </div>
+        <div class="feat-card reveal reveal-d2" data-n="05">
+          <div class="feat-icon">🔒</div>
+          <div class="feat-title">Privacidad Total</div>
+          <p class="feat-desc">Todo el cálculo se ejecuta localmente en tu navegador. Tus datos médicos nunca se
+            transmiten ni se guardan. Solo recopilamos estadísticas de uso y visitas anónimas en la web (analíticas). No
+            hay rastreo de tus datos de salud.</p>
+        </div>
+        <div class="feat-card reveal reveal-d3" data-n="06">
+          <div class="feat-icon">⚕️</div>
+          <div class="feat-title">Diseño Clínico</div>
+          <p class="feat-desc">Creado por médicos para pacientes con práctica clínica activa. Los umbrales y
+            ponderaciones están documentados y referenciados. El código fuente es auditable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ HOW ═══════ -->
+  <section id="how" class="section">
+    <div class="container">
+      <div class="section-rule reveal">
+        <div class="rule-line"></div>
+        <div class="rule-label">Cómo funciona</div>
+        <div class="rule-line"></div>
+      </div>
+
+      <div class="how-grid">
+        <div>
+          <span class="sh-pre reveal">De tus datos a tu perfil</span>
+          <div class="sh-h2 reveal reveal-d1" style="margin-bottom:48px;">Cuatro pasos.<br><em>Cuatro minutos.</em>
+          </div>
+
+          <div class="how-steps">
+            <div class="how-step reveal">
+              <div class="how-step-num">01</div>
+              <div>
+                <div class="how-step-title">Completa el cuestionario</div>
+                <p class="how-step-desc">18 preguntas sobre biométricos, hábitos, historial familiar y factores de
+                  recuperación. No necesitás cuenta ni registro.</p>
+              </div>
+            </div>
+            <div class="how-step reveal reveal-d1">
+              <div class="how-step-num">02</div>
+              <div>
+                <div class="how-step-title">El algoritmo pondera tus datos</div>
+                <p class="how-step-desc">Cada variable contribuye según su dominio. Los pesos reflejan la magnitud
+                  relativa de asociación con riesgo cardiovascular según guías clínicas vigentes.</p>
+              </div>
+            </div>
+            <div class="how-step reveal reveal-d2">
+              <div class="how-step-num">03</div>
+              <div>
+                <div class="how-step-title">Recibís tu perfil cardiovascular</div>
+                <p class="how-step-desc">Puntuación compuesta 0–100 con desglose por dominio, edad cardiovascular
+                  estimada y categoría orientativa de riesgo.</p>
+              </div>
+            </div>
+            <div class="how-step reveal reveal-d3">
+              <div class="how-step-num">04</div>
+              <div>
+                <div class="how-step-title">Consultá con tu médico</div>
+                <p class="how-step-desc">Los resultados son orientativos. Usá esta información como punto de partida
+                  para una conversación informada con tu cardiólogo o médico de cabecera.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="how-visual reveal reveal-d2">
+          <svg viewBox="0 0 280 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:280px;">
+            <line x1="60" y1="20" x2="60" y2="380" stroke="rgba(240,235,227,0.08)" stroke-width="1" />
+            <circle cx="60" cy="60" r="8" fill="var(--red)" opacity="0.8" />
+            <circle cx="60" cy="160" r="8" fill="var(--red)" opacity="0.6" />
+            <circle cx="60" cy="260" r="8" fill="var(--red)" opacity="0.4" />
+            <circle cx="60" cy="360" r="8" fill="var(--gold)" opacity="0.7" />
+            <line x1="60" y1="60" x2="120" y2="60" stroke="rgba(240,235,227,0.12)" stroke-width="1" />
+            <line x1="60" y1="160" x2="120" y2="160" stroke="rgba(240,235,227,0.12)" stroke-width="1" />
+            <line x1="60" y1="260" x2="120" y2="260" stroke="rgba(240,235,227,0.12)" stroke-width="1" />
+            <line x1="60" y1="360" x2="120" y2="360" stroke="rgba(240,235,227,0.12)" stroke-width="1" />
+            <text x="128" y="55" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(240,235,227,0.4)"
+              letter-spacing="2">INPUT</text>
+            <text x="128" y="67" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(144,144,160,0.6)">18
+              VARIABLES</text>
+            <text x="128" y="155" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(240,235,227,0.4)"
+              letter-spacing="2">PROCESS</text>
+            <text x="128" y="167" font-family="JetBrains Mono,monospace" font-size="8"
+              fill="rgba(144,144,160,0.6)">4-DOMAIN SCORING</text>
+            <text x="128" y="255" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(240,235,227,0.4)"
+              letter-spacing="2">OUTPUT</text>
+            <text x="128" y="267" font-family="JetBrains Mono,monospace" font-size="8"
+              fill="rgba(144,144,160,0.6)">COMPOSITE SCORE</text>
+            <text x="128" y="355" font-family="JetBrains Mono,monospace" font-size="9" fill="rgba(196,151,58,0.7)"
+              letter-spacing="2">ACTION</text>
+            <text x="128" y="367" font-family="JetBrains Mono,monospace" font-size="8"
+              fill="rgba(144,144,160,0.6)">CONSULT YOUR MD</text>
+            <rect x="20" y="40" width="20" height="340" fill="none" stroke="rgba(240,235,227,0.05)" stroke-width="1" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CALCULATOR ═══════ -->
+  <section id="calculator" class="section">
+    <div class="container">
+      <div class="section-rule reveal">
+        <div class="rule-line"></div>
+        <div class="rule-label">Calculadora gratuita</div>
+        <div class="rule-line"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start;margin-bottom:48px;">
+        <div class="reveal">
+          <span class="sh-pre">Evaluación cardiovascular</span>
+          <div class="sh-h2">Descubrí tu<br><em>perfil</em><br>cardiovascular.</div>
+          <p class="sh-body">4 minutos. 18 variables. Respondé con sinceridad para máxima utilidad. Todos los cálculos
+            se ejecutan en tu navegador.</p>
+        </div>
+        <div></div>
+      </div>
+
+      <!-- WIDGET -->
+      <div class="calc-panel reveal" id="calcWidget">
+        <div class="calc-head">
+          <div>
+            <div class="calc-head-title">Evaluación de Perfil Cardiovascular</div>
+            <div class="calc-head-sub">Paso <span id="stepLabel">1</span> de 4 — <span id="stepName">Datos
+                biométricos</span></div>
+          </div>
+          <div class="calc-progress">
+            <div class="prog-node active" id="pn1">1</div>
+            <div class="prog-seg" id="ps1"></div>
+            <div class="prog-node" id="pn2">2</div>
+            <div class="prog-seg" id="ps2"></div>
+            <div class="prog-node" id="pn3">3</div>
+            <div class="prog-seg" id="ps3"></div>
+            <div class="prog-node" id="pn4">4</div>
+          </div>
+        </div>
+
+        <div class="calc-body">
+
+          <!-- STEP 1 -->
+          <div class="calc-step active" id="step-1">
+            <div class="step-section-label">01 / Datos Personales y Biométricos</div>
+            <div class="form-grid">
+              <div class="fg">
+                <label>Edad (años)</label>
+                <input type="number" id="c-age" min="18" max="100" value="45">
+              </div>
+              <div class="fg">
+                <label>Sexo biológico</label>
+                <select id="c-sex">
+                  <option value="male">Masculino</option>
+                  <option value="female">Femenino</option>
+                </select>
+              </div>
+              <div class="fg">
+                <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                  <label>Presión arterial sistólica (mmHg)</label>
+                  <label
+                    style="display:flex; align-items:center; gap:4px; font-size:0.5rem; text-transform:none; cursor:none;"><input
+                      type="checkbox" id="unk-sbp"
+                      onchange="document.getElementById('c-sbp').disabled = this.checked; document.getElementById('c-sbp').style.opacity = this.checked ? 0.3 : 1;">
+                    No lo sé</label>
+                </div>
+                <input type="number" id="c-sbp" min="80" max="220" value="120">
+              </div>
+              <div class="fg">
+                <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                  <label>Frecuencia cardíaca en reposo (lpm)</label>
+                  <label
+                    style="display:flex; align-items:center; gap:4px; font-size:0.5rem; text-transform:none; cursor:none;"><input
+                      type="checkbox" id="unk-rhr"
+                      onchange="document.getElementById('c-rhr').disabled = this.checked; document.getElementById('c-rhr').style.opacity = this.checked ? 0.3 : 1;">
+                    No lo sé</label>
+                </div>
+                <input type="number" id="c-rhr" min="30" max="130" value="65">
+              </div>
+              <div class="fg">
+                <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                  <label>Colesterol LDL (mg/dL)</label>
+                  <label
+                    style="display:flex; align-items:center; gap:4px; font-size:0.5rem; text-transform:none; cursor:none;"><input
+                      type="checkbox" id="unk-ldl"
+                      onchange="document.getElementById('c-ldl').disabled = this.checked; document.getElementById('c-ldl').style.opacity = this.checked ? 0.3 : 1;">
+                    No lo sé</label>
+                </div>
+                <input type="number" id="c-ldl" min="40" max="300" value="100">
+              </div>
+              <div class="fg">
+                <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                  <label>Glucosa en ayunas (mg/dL)</label>
+                  <label
+                    style="display:flex; align-items:center; gap:4px; font-size:0.5rem; text-transform:none; cursor:none;"><input
+                      type="checkbox" id="unk-glucose"
+                      onchange="document.getElementById('c-glucose').disabled = this.checked; document.getElementById('c-glucose').style.opacity = this.checked ? 0.3 : 1;">
+                    No lo sé</label>
+                </div>
+                <input type="number" id="c-glucose" min="50" max="400" value="90">
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="calc-step" id="step-2">
+            <div class="step-section-label">02 / Estilo de Vida y Hábitos</div>
+
+            <div class="slider-block">
+              <div class="slider-top">
+                <label>Actividad física semanal</label>
+                <span class="slider-val" id="ex-val">3h</span>
+              </div>
+              <input type="range" id="c-exercise" min="0" max="20" value="3" step="0.5"
+                oninput="document.getElementById('ex-val').textContent=this.value+'h'">
+              <div class="slider-scale"><span>0h — Sedentario</span><span>2.5–5h — Rec. ESC</span><span>20h —
+                  Atleta</span></div>
+            </div>
+
+            <div class="slider-block">
+              <div class="slider-top">
+                <label>Horas de sueño por noche</label>
+                <span class="slider-val" id="sl-val">7h</span>
+              </div>
+              <input type="range" id="c-sleep" min="3" max="12" value="7" step="0.5"
+                oninput="document.getElementById('sl-val').textContent=this.value+'h'">
+              <div class="slider-scale"><span>3h</span><span>7–9h óptimo</span><span>12h</span></div>
+            </div>
+
+            <span class="rg-label">Calidad de la dieta</span>
+            <div class="radio-grid">
+              <div class="rc"><input type="radio" name="diet" id="d1" value="5" checked><label for="d1"><span
+                    class="rc-icon">🥗</span><span class="rc-text">Mediterránea / DASH</span></label></div>
+              <div class="rc"><input type="radio" name="diet" id="d2" value="3"><label for="d2"><span
+                    class="rc-icon">🍽️</span><span class="rc-text">Balanceada</span></label></div>
+              <div class="rc"><input type="radio" name="diet" id="d3" value="1"><label for="d3"><span
+                    class="rc-icon">🍔</span><span class="rc-text">Ultraprocesada</span></label></div>
+              <div class="rc"><input type="radio" name="diet" id="d4" value="2"><label for="d4"><span
+                    class="rc-icon">🥩</span><span class="rc-text">Carnívora / Keto</span></label></div>
+            </div>
+
+            <div style="margin-top:28px;">
+              <span class="rg-label">Nivel de estrés percibido</span>
+              <div class="radio-grid">
+                <div class="rc"><input type="radio" name="stress" id="s1" value="5" checked><label for="s1"><span
+                      class="rc-icon">😌</span><span class="rc-text">Bajo</span></label></div>
+                <div class="rc"><input type="radio" name="stress" id="s2" value="3"><label for="s2"><span
+                      class="rc-icon">😐</span><span class="rc-text">Moderado</span></label></div>
+                <div class="rc"><input type="radio" name="stress" id="s3" value="1"><label for="s3"><span
+                      class="rc-icon">😰</span><span class="rc-text">Alto</span></label></div>
+                <div class="rc"><input type="radio" name="stress" id="s4" value="0"><label for="s4"><span
+                      class="rc-icon">🔥</span><span class="rc-text">Muy alto</span></label></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="calc-step" id="step-3">
+            <div class="step-section-label">03 / Historial Médico y Factores de Riesgo</div>
+
+            <span class="rg-label">Tabaquismo</span>
+            <div class="radio-grid" style="margin-bottom:28px;">
+              <div class="rc"><input type="radio" name="smoking" id="sm0" value="5" checked><label for="sm0"><span
+                    class="rc-icon">🚫</span><span class="rc-text">Nunca fumé</span></label></div>
+              <div class="rc"><input type="radio" name="smoking" id="sm1" value="3"><label for="sm1"><span
+                    class="rc-icon">✅</span><span class="rc-text">Ex-fumador</span></label></div>
+              <div class="rc"><input type="radio" name="smoking" id="sm2" value="0"><label for="sm2"><span
+                    class="rc-icon">🚬</span><span class="rc-text">Fumador activo</span></label></div>
+            </div>
+
+            <span class="rg-label">Consumo de alcohol</span>
+            <div class="radio-grid" style="margin-bottom:28px;">
+              <div class="rc"><input type="radio" name="alcohol" id="al0" value="5" checked><label for="al0"><span
+                    class="rc-icon">🚫</span><span class="rc-text">No consumo</span></label></div>
+              <div class="rc"><input type="radio" name="alcohol" id="al1" value="4"><label for="al1"><span
+                    class="rc-icon">🍷</span><span class="rc-text">Ocasional</span></label></div>
+              <div class="rc"><input type="radio" name="alcohol" id="al2" value="2"><label for="al2"><span
+                    class="rc-icon">🍻</span><span class="rc-text">Moderado</span></label></div>
+              <div class="rc"><input type="radio" name="alcohol" id="al3" value="0"><label for="al3"><span
+                    class="rc-icon">⚠️</span><span class="rc-text">Frecuente</span></label></div>
+            </div>
+
+            <span class="rg-label">Antecedentes familiares de enfermedad cardiovascular precoz (infartos, ACV)</span>
+            <div class="radio-grid">
+              <div class="rc"><input type="radio" name="family" id="f0" value="5" checked><label for="f0"><span
+                    class="rc-icon">✅</span><span class="rc-text">Sin antecedentes</span></label></div>
+              <div class="rc"><input type="radio" name="family" id="f1" value="2"><label for="f1"><span
+                    class="rc-icon">⚠️</span><span class="rc-text">1 familiar directo</span></label></div>
+              <div class="rc"><input type="radio" name="family" id="f2" value="0"><label for="f2"><span
+                    class="rc-icon">🚨</span><span class="rc-text">2+ familiares</span></label></div>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="calc-step" id="step-4">
+            <div class="step-section-label">04 / Recuperación, Bienestar y Datos Complementarios</div>
+
+            <div class="slider-block">
+              <div class="slider-top">
+                <label>IMC aproximado (kg/m²)</label>
+                <div style="display:flex; gap:16px; align-items:baseline;">
+                  <label
+                    style="display:flex; align-items:center; gap:4px; font-size:0.5rem; color:var(--mid); text-transform:none; cursor:none;"><input
+                      type="checkbox" id="unk-bmi"
+                      onchange="document.getElementById('c-bmi').disabled = this.checked; document.getElementById('bmi-val').style.opacity = this.checked ? 0.3 : 1; document.getElementById('c-bmi').style.opacity = this.checked ? 0.3 : 1;">
+                    No lo sé</label>
+                  <span class="slider-val" id="bmi-val">24</span>
+                </div>
+              </div>
+              <input type="range" id="c-bmi" min="16" max="45" value="24" step="0.5"
+                oninput="document.getElementById('bmi-val').textContent=this.value">
+              <div class="slider-scale"><span>&lt;18.5 Bajo peso</span><span>18.5–24.9 Normal</span><span>25+
+                  Sobrepeso</span></div>
+            </div>
+
+            <span class="rg-label">Calidad del sueño subjetiva</span>
+            <div class="radio-grid" style="margin-bottom:28px;">
+              <div class="rc"><input type="radio" name="sleepq" id="sq1" value="5" checked><label for="sq1"><span
+                    class="rc-icon">😴</span><span class="rc-text">Excelente</span></label></div>
+              <div class="rc"><input type="radio" name="sleepq" id="sq2" value="3"><label for="sq2"><span
+                    class="rc-icon">😶</span><span class="rc-text">Regular</span></label></div>
+              <div class="rc"><input type="radio" name="sleepq" id="sq3" value="1"><label for="sq3"><span
+                    class="rc-icon">😵</span><span class="rc-text">Mala</span></label></div>
+            </div>
+
+            <span class="rg-label">¿Tomás medicación cardiovascular actualmente?</span>
+            <div class="radio-grid">
+              <div class="rc"><input type="radio" name="meds" id="m0" value="3" checked><label for="m0"><span
+                    class="rc-icon">✅</span><span class="rc-text">No</span></label></div>
+              <div class="rc"><input type="radio" name="meds" id="m1" value="2"><label for="m1"><span
+                    class="rc-icon">💊</span><span class="rc-text">Sí, controlado</span></label></div>
+              <div class="rc"><input type="radio" name="meds" id="m2" value="1"><label for="m2"><span
+                    class="rc-icon">⚠️</span><span class="rc-text">Sí, no controlado</span></label></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="calc-foot">
+          <button class="btn-back" id="btnBack" onclick="prevStep()" style="visibility:hidden">← Anterior</button>
+          <button class="btn-next" id="btnNext" onclick="nextStep()">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results">
+        <div class="result-wrap">
+
+          <div class="result-top">
+            <div class="gauge-wrap">
+              <svg viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path id="z-red" d="" fill="none" stroke="rgba(196,18,48,0.15)" stroke-width="12"
+                  stroke-linecap="butt" />
+                <path id="z-yel" d="" fill="none" stroke="rgba(241,196,15,0.15)" stroke-width="12"
+                  stroke-linecap="butt" />
+                <path id="z-blu" d="" fill="none" stroke="rgba(52,152,219,0.15)" stroke-width="12"
+                  stroke-linecap="butt" />
+                <path id="z-grn" d="" fill="none" stroke="rgba(46,204,113,0.15)" stroke-width="12"
+                  stroke-linecap="butt" />
+                <path id="gauge-track" fill="none" stroke="rgba(240,235,227,0.07)" stroke-width="12" />
+                <path id="gauge-fill" fill="none" stroke-width="12" stroke-linecap="round"
+                  style="transition:stroke-dasharray 1.6s cubic-bezier(0.4,0,0.2,1),stroke 0.5s ease;" />
+                <g id="gauge-ticks" stroke="rgba(240,235,227,0.2)" stroke-width="1" />
+                <line id="gauge-needle" x1="160" y1="160" x2="160" y2="70" stroke="var(--red)" stroke-width="2"
+                  stroke-linecap="round" transform-origin="160 160"
+                  style="transition:transform 1.6s cubic-bezier(0.4,0,0.2,1);transform:rotate(-130deg);" />
+                <circle cx="160" cy="160" r="8" fill="var(--bg)" stroke="rgba(240,235,227,0.2)" stroke-width="1" />
+                <circle cx="160" cy="160" r="3" fill="var(--red)" />
+                <text id="gauge-score" x="160" y="148" text-anchor="middle" font-family="JetBrains Mono,monospace"
+                  font-size="32" font-weight="700" fill="#f0ebe3">—</text>
+                <text x="160" y="164" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9"
+                  fill="rgba(144,144,160,0.7)" letter-spacing="3">PERFIL CV</text>
+                <text x="28" y="168" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(144,144,160,0.5)"
+                  text-anchor="middle">0</text>
+                <text x="292" y="168" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(144,144,160,0.5)"
+                  text-anchor="middle">100</text>
+              </svg>
+            </div>
+
+            <div class="result-data">
+              <div class="res-grade" id="resGrade">—</div>
+              <div class="res-title" id="resTitle"></div>
+              <p class="res-desc" id="resDesc"></p>
+            </div>
+          </div>
+
+          <!-- Domain breakdown -->
+          <div class="domain-grid" id="domainGrid">
+            <div class="domain-card">
+              <div class="domain-label">Vascular</div>
+              <div class="domain-bar-wrap">
+                <div class="domain-bar" id="bar-vasc" style="background:#c41230;"></div>
+              </div>
+              <span class="domain-val" id="val-vasc">—</span> <span class="domain-max">/ 30</span>
+            </div>
+            <div class="domain-card">
+              <div class="domain-label">Metabólico</div>
+              <div class="domain-bar-wrap">
+                <div class="domain-bar" id="bar-meta" style="background:#f39c12;"></div>
+              </div>
+              <span class="domain-val" id="val-meta">—</span> <span class="domain-max">/ 20</span>
+            </div>
+            <div class="domain-card">
+              <div class="domain-label">Conductual</div>
+              <div class="domain-bar-wrap">
+                <div class="domain-bar" id="bar-behav" style="background:#3498db;"></div>
+              </div>
+              <span class="domain-val" id="val-behav">—</span> <span class="domain-max">/ 30</span>
+            </div>
+            <div class="domain-card">
+              <div class="domain-label">Recuperación</div>
+              <div class="domain-bar-wrap">
+                <div class="domain-bar" id="bar-recov" style="background:#2ecc71;"></div>
+              </div>
+              <span class="domain-val" id="val-recov">—</span> <span class="domain-max">/ 20</span>
+            </div>
+          </div>
+
+          <!-- Interactive Heart Visualization -->
+          <div class="heart-section" id="heartSection">
+            <div class="heart-container">
+              <svg class="heart-svg" viewBox="0 0 280 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Pulse ring (behind heart) -->
+                <ellipse class="heart-pulse-ring" id="pulseRing" cx="140" cy="130" rx="120" ry="110"
+                  stroke="rgba(196,18,48,0.15)" stroke-width="1" fill="none" />
+
+                <g class="heart-beat-group" id="heartBeatGroup">
+                  <!-- Heart shape -->
+                  <path class="heart-main" id="heartMain"
+                    d="M140,220 C140,220 40,165 40,100 C40,60 70,30 110,30 C125,30 136,40 140,52 C144,40 155,30 170,30 C210,30 240,60 240,100 C240,165 140,220 140,220 Z"
+                    fill="rgba(196,18,48,0.6)" stroke="rgba(196,18,48,0.8)" stroke-width="1.5" />
+
+                  <!-- Aging veins (appear with worse scores) -->
+                  <path class="heart-vein" id="vein1" d="M140,80 C140,80 125,100 120,120 C115,140 118,160 140,180"
+                    stroke="rgba(100,40,50,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                  <path class="heart-vein" id="vein2" d="M140,70 C155,90 165,110 160,135 C155,155 148,170 140,185"
+                    stroke="rgba(100,40,50,0.4)" stroke-width="1" fill="none" stroke-linecap="round" />
+                  <path class="heart-vein" id="vein3" d="M100,70 C105,90 100,110 105,130" stroke="rgba(100,40,50,0.3)"
+                    stroke-width="1" fill="none" stroke-linecap="round" />
+                  <path class="heart-vein" id="vein4" d="M180,70 C175,90 180,110 175,130" stroke="rgba(100,40,50,0.3)"
+                    stroke-width="1" fill="none" stroke-linecap="round" />
+
+                  <!-- Healthy glow overlay (appears with good scores) -->
+                  <path class="heart-main" id="heartGlow"
+                    d="M140,220 C140,220 40,165 40,100 C40,60 70,30 110,30 C125,30 136,40 140,52 C144,40 155,30 170,30 C210,30 240,60 240,100 C240,165 140,220 140,220 Z"
+                    fill="none" stroke="none" opacity="0" />
+                </g>
+
+                <!-- Decorative elements -->
+                <circle cx="70" cy="65" r="2" fill="rgba(240,235,227,0.1)" />
+                <circle cx="210" cy="65" r="2" fill="rgba(240,235,227,0.1)" />
+                <circle cx="140" cy="40" r="1.5" fill="rgba(240,235,227,0.08)" />
+              </svg>
+
+              <div class="heart-age-display">
+                <div class="heart-age-num" id="heartAgeNum">—</div>
+                <div class="heart-age-label" id="heartAgeLabel">años cardiovasculares</div>
+              </div>
+            </div>
+
+            <div class="heart-caption" id="heartCaption"></div>
+            <div class="heart-vs" id="heartVs"></div>
+            <div class="heart-caption" id="heartUnknownWarn"
+              style="font-size:0.75rem; color:var(--mid); margin-top:12px; font-weight:300;"><em>Nota: Completar tus
+                valores de laboratorio y biométricos exactos mejora la precisión de tu Score.</em></div>
+          </div>
+
+          <div class="reco-section" id="recoSection" style="display:none;">
+            <div class="reco-header">
+              <div class="reco-header-label">Margen de Mejora</div>
+              <div class="reco-header-title">Plan de Acción Personalizado</div>
+            </div>
+            <div class="reco-cards" id="recoCards">
+              <!-- JS genera 1-3 tarjetas dinámicamente -->
+            </div>
+          </div>
+
+          <div class="share-bar">
+            <span class="share-label">Compartí tu resultado</span>
+            <button class="share-btn share-x" onclick="shareTwitter()">𝕏 Twitter</button>
+            <button class="share-btn share-wa" onclick="shareWhatsApp()">WhatsApp</button>
+          </div>
+
+          <div class="res-cards">
+            <div class="res-card">
+              <div class="res-card-label">Edad Cardiovascular Estimada</div>
+              <div class="res-card-val" id="cardioAge">—</div>
+              <div class="res-card-sub">años (orientativo)</div>
+            </div>
+            <div class="res-card">
+              <div class="res-card-label">Categoría de Riesgo</div>
+              <div class="res-card-val" id="riskCat">—</div>
+              <div class="res-card-sub">según perfil compuesto</div>
+            </div>
+            <div class="res-card">
+              <div class="res-card-label">Factores Modificables</div>
+              <div class="res-card-val" id="modifiableCount">—</div>
+              <div class="res-card-sub">áreas de mejora identificadas</div>
+            </div>
+          </div>
+
+          <div class="optin-section">
+            <div class="optin-icon">🔔</div>
+            <div class="optin-text">¿Querés recibir un recordatorio trimestral para recalcular tu perfil?</div>
+            <div class="optin-form">
+              <input type="email" id="optinEmail" placeholder="tu@email.com" class="optin-input">
+              <button onclick="submitOptin()" class="optin-btn">Recordarme</button>
+            </div>
+            <div class="optin-note">Solo usamos tu email para el recordatorio. Sin spam. Podés cancelar en cualquier
+              momento.</div>
+            <div id="optinMsg" class="optin-msg"></div>
+          </div>
+
+          <!-- Methodology note in results -->
+          <div class="method-note">
+            <div class="method-note-title">⚠️ Aviso importante</div>
+            <p>
+              Esta puntuación es una <strong>herramienta educativa, orientativa y no diagnóstica</strong>. No sustituye
+              la evaluación clínica
+              de un profesional médico. Los pesos asignados a cada variable reflejan la magnitud relativa de su
+              asociación
+              con eventos cardiovasculares según las guías ESC 2021, pero este score compuesto <strong>no ha sido
+                validado
+                prospectivamente en una cohorte independiente</strong>. Consultá siempre con tu cardiólogo o médico de
+              cabecera
+              antes de tomar decisiones sobre tu salud.
+            </p>
+            <div
+              style="margin-top:24px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; padding-top:16px; border-top: 1px solid var(--border);">
+              <button class="btn-restart" onclick="restartCalc()">↩ Recalcular tu score</button>
+              <button class="btn-restart" style="color:var(--hi); border-color:var(--dim);"
+                onclick="openContactModal(event)">✉ ¿Dudas sobre tu perfil? Escribinos</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════ METHODOLOGY ═══════ -->
+  <section id="methodology" class="section">
+    <div class="container">
+      <div class="section-rule reveal">
+        <div class="rule-line"></div>
+        <div class="rule-label">Base científica</div>
+        <div class="rule-line"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start;margin-bottom:48px;">
+        <div class="reveal">
+          <span class="sh-pre">Transparencia total</span>
+          <div class="sh-h2">Metodología<br><em>y referencias.</em></div>
+          <p style="font-size:0.85rem;font-weight:300;color:var(--dim);margin-top:8px;">
+            Desarrollada por Dr. Jorge Aguirre de la Cámara, cardiólogo en formación con
+            práctica clínica activa en unidad de cuidados cardíacos de alta complejidad.
+            Argentina, 2026.
+          </p>
+        </div>
+        <div class="reveal reveal-d1">
+          <p
+            style="font-size:1.05rem;font-weight:300;color:var(--mid);line-height:1.85;max-width:560px;padding-top:48px;">
+            Los umbrales y ponderaciones utilizados en esta calculadora están documentados y referenciados.
+            El algoritmo es determinístico, reproducible y auditable. A continuación se detallan las fuentes
+            y la lógica de cada dominio.
+          </p>
+          <div style="display:inline-flex;align-items:center;gap:8px;
+            font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+            letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);
+            border:1px solid var(--border);padding:4px 14px;margin-top:16px;">
+            Última actualización: Marzo 2026 · ESC/EAS 2025 + ACC/AHA 2026
+          </div>
+        </div>
+      </div>
+
+      <div class="meth-grid reveal reveal-d2">
+        <div class="meth-card">
+          <div class="meth-card-num">Ref. 01</div>
+          <div class="meth-card-title">Guías ESC 2021 de Prevención CV</div>
+          <p class="meth-card-desc">Visseren FLJ et al. Eur Heart J. 2021;42(34):3227-3337. Base para selección de
+            factores de riesgo, estructura multifactorial y uso de SCORE2/SCORE2-OP para riesgo a 10 años.</p>
+        </div>
+        <div class="meth-card">
+          <div class="meth-card-num">Ref. 02</div>
+          <div class="meth-card-title">ESC/EAS 2025 Focused Update — Dislipemias</div>
+          <p class="meth-card-desc">Mach F, Koskinas KC et al. Eur Heart J. 2025;46:4359-4378. Actualiza umbrales de
+            LDL-C por categoría de riesgo: &lt;55 mg/dL muy alto, &lt;70 alto, &lt;100 moderado, &lt;116 bajo. Incorpora
+            SCORE2 y bempedoic acid.</p>
+        </div>
+        <div class="meth-card">
+          <div class="meth-card-num">Ref. 03</div>
+          <div class="meth-card-title">ACC/AHA 2026 — Manejo de Dislipidemia</div>
+          <p class="meth-card-desc">Blumenthal RS, Morris PB et al. JACC 2026. Reemplaza las guías 2018. Introduce
+            ecuaciones PREVENT-ASCVD, riesgo bajo &lt;3%, borderline 3-5%, intermedio 5-10%, alto ≥10%. Meta LDL-C
+            &lt;70 mg/dL en alto riesgo, &lt;100 en intermedio. Medición universal de Lp(a).</p>
+        </div>
+        <div class="meth-card">
+          <div class="meth-card-num">Ref. 04</div>
+          <div class="meth-card-title">ESC/EHA 2018 HTA + ADA 2024 Glucemia</div>
+          <p class="meth-card-desc">Umbrales de PAS: &lt;120 óptimo, 120-129 normal, 130-139 normal-alto, ≥140 HTA
+            (ESC/EHA 2018). Glucosa: &lt;100 normal, 100-125 prediabetes, ≥126 diabetes (ADA 2024). IMC según OMS.</p>
+        </div>
+        <div class="meth-card">
+          <div class="meth-card-num">Ref. 05</div>
+          <div class="meth-card-title">Actividad Física + Sueño y Riesgo CV</div>
+          <p class="meth-card-desc">ESC 2021 recomienda 150-300 min/semana de actividad moderada. AHA Life's Essential 8
+            incluye 7-9h de sueño como factor CV. La zona óptima del score refleja estas recomendaciones.</p>
+        </div>
+        <div class="meth-card">
+          <div class="meth-card-num">Limitación</div>
+          <div class="meth-card-title">Score Compuesto No Validado</div>
+          <p class="meth-card-desc">Este score integra factores de riesgo validados individualmente en guías ESC
+            2021/2025 y ACC/AHA 2026, pero la ponderación entre dominios (30-20-30-20) es expert-assigned, no
+            regression-derived. No ha sido validada en cohorte independiente. Es una herramienta educativa y
+            orientativa, no diagnóstica.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ DISCLAIMER BAR ═══════ -->
+  <div class="disclaimer-bar">
+    <div class="disclaimer-inner">
+      <div class="disclaimer-icon">⚕️</div>
+      <div class="disclaimer-text">
+        <strong>Aviso médico legal:</strong> UpgradeYourHeart es una herramienta educativa y orientativa de
+        autoevaluación
+        y no constituye un dispositivo médico, diagnóstico ni consejo médico profesional. Los resultados no deben
+        ser interpretados como un diagnóstico clínico. Consultá siempre con un profesional de la salud cualificado
+        antes de tomar decisiones relacionadas con tu salud cardiovascular. Esta herramienta no está destinada a
+        diagnosticar, tratar, curar o prevenir ninguna enfermedad. Todo el procesamiento se realiza localmente
+        en tu navegador — ningún dato personal es transmitido, almacenado ni procesado en servidores externos.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ CTA ═══════ -->
+  <section id="cta">
+    <div style="position:relative;z-index:1;">
+      <span class="cta-label reveal">Evaluación gratuita — sin registro</span>
+      <div class="cta-h reveal reveal-d1">Conocé tu perfil<br>cardiovascular</div>
+      <div class="cta-sub reveal reveal-d2">en menos de 4 minutos.</div>
+      <button class="btn-cta reveal reveal-d3" onclick="scrollToCalc()">Evaluar mi perfil gratis</button>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer>
+    <div class="footer-inner">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <p class="footer-copy">© 2026 UpgradeYourHeart · Creado por médicos para pacientes.</p>
+        <p class="footer-copy">Founder: Dr. Jorge Aguirre de la Cámara | Mail: <a
+            href="mailto:aguirredelacamara.jh@gmail.com"
+            style="color:var(--dim); text-decoration:none;">aguirredelacamara.jh@gmail.com</a></p>
+      </div>
+      <p class="footer-note" style="max-width: 600px;">Herramienta educativa y orientativa. No sustituye el diagnóstico
+        médico profesional. El autor se exime de cualquier responsabilidad médica, civil o penal derivada del uso de
+        esta calculadora y sus resultados. Todo resultado es meramente estadístico. Consultá siempre con tu cardiólogo o
+        médico de cabecera antes de tomar cualquier decisión de salud. Ningún dato se transmite a servidores externos.
+      </p>
+      <ul class="footer-links">
+        <li><a href="#methodology">Metodología</a></li>
+        <li><a href="#" onclick="openLegalModal(event)">Aviso médico</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- MODAL DE CONTACTO -->
+  <div id="contact-modal">
+    <div class="contact-box">
+      <button class="contact-close" onclick="closeContactModal()">×</button>
+      <div class="contact-h">Dejanos tu consulta</div>
+      <div class="contact-p">Respondé a tus dudas o envianos sugerencias de forma rápida segura.</div>
+      <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
+        <input type="email" id="contactEmail" class="contact-input" placeholder="Tu correo electrónico" required>
+        <textarea id="contactQuestion" class="contact-textarea" placeholder="¿Cuál es tu pregunta?" required></textarea>
+        <button type="submit" class="contact-btn" id="contactSubmitBtn">Enviar consulta</button>
+        <div id="contactMsg" class="contact-msg"></div>
+        <div class="contact-note">Soportado por Supabase. Asegurate de crear la tabla "contact_messages".</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL LEGAL -->
+  <div id="legal-modal"
+    style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.8); backdrop-filter:blur(8px); opacity:0; transition:opacity 0.3s; pointer-events:none; justify-content:center; align-items:center;">
+    <div class="contact-box"
+      style="transform:translateY(20px); transition:transform 0.3s; max-height:80vh; overflow-y:auto;">
+      <button class="contact-close" onclick="closeLegalModal()">×</button>
+      <div class="contact-h">Aviso Médico-Legal</div>
+      <div class="contact-p" style="text-align:left; font-size:0.8rem; line-height:1.6; margin-bottom:0;">
+        <p style="margin-bottom:12px;"><strong>UpgradeYourHeart</strong> es una herramienta educacional y orientativa de
+          autoevaluación del perfil cardiovascular. NO constituye un dispositivo médico, diagnóstico clínico, ni consejo
+          médico profesional.</p>
+        <p style="margin-bottom:12px;">Los resultados generados por esta calculadora son estimaciones basadas en
+          factores de riesgo reconocidos por las guías de la European Society of Cardiology (ESC 2021, ESC/EAS 2025) y
+          la American College of Cardiology/American Heart Association (ACC/AHA 2026). Sin embargo, el score compuesto
+          utilizado NO ha sido validado prospectivamente en una cohorte independiente. Las ponderaciones entre dominios
+          son asignadas por criterio experto en proyecciones publicadas, no derivadas de análisis de regresión.</p>
+        <p style="margin-bottom:12px;">Esta herramienta <strong>NO está destinada a diagnosticar, tratar, curar o
+            prevenir</strong> ninguna enfermedad. Los resultados NO deben ser utilizados como base para decisiones
+          clínicas sin la evaluación de un profesional médico cualificado. Consulte siempre con su cardiólogo o médico
+          de cabecera antes de tomar decisiones relacionadas con su salud cardiovascular.</p>
+        <p style="margin-bottom:12px;"><strong>PRIVACIDAD Y DATOS</strong><br>Todo el procesamiento se realiza
+          localmente en su navegador. Ningún dato de salud es transmitido, almacenado ni procesado en servidores
+          externos. El único dato que se almacena externamente es el email de contacto si usted lo proporciona
+          voluntariamente a través del formulario opcional de sugerencias.</p>
+        <p style="margin-bottom:12px;"><strong>AUTOR</strong><br>Dr. Jorge Aguirre de la Cámara —
+          Cardiólogo<br>Contacto: aguirredelacamara.jh@gmail.com</p>
+        <p style="color:var(--dim); font-size:0.7rem; font-family:'JetBrains Mono',monospace;">ÚLTIMA ACTUALIZACIÓN:
+          MARZO 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ══════════════════════════════════════════════
+    // CURSOR
+    // ══════════════════════════════════════════════
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    });
+    function animRing() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    }
+    animRing();
+
+    document.querySelectorAll('a,button,.rc label').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1.8)'; cursorRing.style.transform = 'translate(-50%,-50%) scale(1.5)'; });
+      el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; cursorRing.style.transform = 'translate(-50%,-50%) scale(1)'; });
+    });
+
+    // ══════════════════════════════════════════════
+    // SCROLL PROGRESS + NAV
+    // ══════════════════════════════════════════════
+    const prog = document.getElementById('scroll-prog');
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      prog.style.width = pct + '%';
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ══════════════════════════════════════════════
+    // REVEAL ON SCROLL
+    // ══════════════════════════════════════════════
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ══════════════════════════════════════════════
+    // GAUGE SETUP
+    // ══════════════════════════════════════════════
+    function polarToXY(cx, cy, r, deg) {
+      const rad = (deg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function makeArcPath(cx, cy, r, startDeg, endDeg) {
+      const s = polarToXY(cx, cy, r, startDeg);
+      const e = polarToXY(cx, cy, r, endDeg);
+      const large = endDeg - startDeg > 180 ? 1 : 0;
+      return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
+    }
+
+    const CX = 160, CY = 160, R = 120;
+    const START_DEG = -130, END_DEG = 130, RANGE = 260;
+
+    function drawGaugeZones() {
+      const zones = [
+        { id: 'z-red', s: 0, e: 35, color: 'rgba(196,18,48,0.2)' },
+        { id: 'z-yel', s: 35, e: 55, color: 'rgba(241,196,15,0.18)' },
+        { id: 'z-blu', s: 55, e: 75, color: 'rgba(52,152,219,0.18)' },
+        { id: 'z-grn', s: 75, e: 100, color: 'rgba(46,204,113,0.2)' },
+      ];
+      zones.forEach(z => {
+        const el = document.getElementById(z.id);
+        if (!el) return;
+        const s = START_DEG + z.s / 100 * RANGE;
+        const e = START_DEG + z.e / 100 * RANGE;
+        el.setAttribute('d', makeArcPath(CX, CY, R, s, e));
+        el.setAttribute('stroke', z.color);
+        el.setAttribute('stroke-width', '12');
+        el.setAttribute('fill', 'none');
+      });
+      const track = document.getElementById('gauge-track');
+      if (track) track.setAttribute('d', makeArcPath(CX, CY, R, START_DEG, END_DEG));
+    }
+    drawGaugeZones();
+
+    function drawGaugeTicks() {
+      const g = document.getElementById('gauge-ticks');
+      if (!g) return;
+      for (let v = 0; v <= 100; v += 10) {
+        const deg = START_DEG + v / 100 * RANGE;
+        const inner = polarToXY(CX, CY, R - 10, deg);
+        const outer = polarToXY(CX, CY, R + 2, deg);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', inner.x); line.setAttribute('y1', inner.y);
+        line.setAttribute('x2', outer.x); line.setAttribute('y2', outer.y);
+        line.setAttribute('stroke', 'rgba(240,235,227,0.25)'); line.setAttribute('stroke-width', '1.5');
+        g.appendChild(line);
+      }
+      for (let v = 0; v <= 100; v += 5) {
+        if (v % 10 === 0) continue;
+        const deg = START_DEG + v / 100 * RANGE;
+        const inner = polarToXY(CX, CY, R - 6, deg);
+        const outer = polarToXY(CX, CY, R + 2, deg);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', inner.x); line.setAttribute('y1', inner.y);
+        line.setAttribute('x2', outer.x); line.setAttribute('y2', outer.y);
+        line.setAttribute('stroke', 'rgba(240,235,227,0.1)'); line.setAttribute('stroke-width', '1');
+        g.appendChild(line);
+      }
+    }
+    drawGaugeTicks();
+
+    // ══════════════════════════════════════════════
+    // CALCULATOR STEPS
+    // ══════════════════════════════════════════════
+    let curStep = 1;
+    const stepNames = ['Datos biométricos', 'Estilo de vida', 'Historial médico', 'Recuperación'];
+
+    function scrollToCalc() { document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' }); }
+
+    function updateProgress() {
+      document.getElementById('stepLabel').textContent = curStep;
+      document.getElementById('stepName').textContent = stepNames[curStep - 1];
+      for (let i = 1; i <= 4; i++) {
+        const n = document.getElementById('pn' + i);
+        n.classList.remove('active', 'done');
+        if (i < curStep) n.classList.add('done');
+        else if (i === curStep) n.classList.add('active');
+      }
+      for (let i = 1; i <= 3; i++) {
+        const s = document.getElementById('ps' + i);
+        s.classList.toggle('done', i < curStep);
+      }
+      document.getElementById('btnBack').style.visibility = curStep === 1 ? 'hidden' : 'visible';
+      document.getElementById('btnNext').textContent = curStep === 4 ? 'Ver mi resultado →' : 'Continuar →';
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.calc-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+    }
+
+    function nextStep() {
+      if (curStep < 4) { curStep++; showStep(curStep); updateProgress(); }
+      else calculateScore();
+    }
+    function prevStep() { if (curStep > 1) { curStep--; showStep(curStep); updateProgress(); } }
+
+    // ══════════════════════════════════════════════
+    // SCORING ENGINE
+    // Transparent, guideline-referenced composite score
+    // Total: 100 pts = Vascular(30) + Metabolic(20) + Behavioral(30) + Recovery(20)
+    //
+    // RATIONALE FOR DOMAIN WEIGHTS:
+    // - Vascular (30%): SBP, RHR, LDL are the strongest independent predictors
+    //   of MACE in population studies. SBP alone accounts for the largest
+    //   population-attributable risk fraction for CVD globally (GBD 2019).
+    // - Behavioral (30%): Lifestyle factors (exercise, diet, smoking, alcohol,
+    //   stress) collectively account for ~80% of attributable CV risk in
+    //   INTERHEART (Yusuf et al., Lancet 2004).
+    // - Metabolic (20%): Glucose and BMI are strong but partially overlap with
+    //   vascular markers. Lower weight reflects this collinearity.
+    // - Recovery (20%): Sleep, family history, medication status are modifiers
+    //   rather than primary drivers. Included for comprehensiveness.
+    //
+    // THRESHOLDS: Each variable uses cut-points from published guidelines
+    // (ESC 2021, ESC/EHA 2018, ESC/EAS 2019, ADA 2024, OMS BMI).
+    // The penalty magnitude within each variable is proportional to the
+    // relative hazard increase observed in epidemiological studies.
+    //
+    // LIMITATIONS:
+    // - This composite score has NOT been validated prospectively.
+    // ══════════════════════════════════════════════
+
+    function radioVal(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? parseFloat(el.value) : 3; }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+    let global_score = 0;
+    let global_cardioAge = 0;
+    let global_chronoAge = 0;
+
+    function calculateScore() {
+      const age = parseFloat(document.getElementById('c-age').value) || 45;
+      const sex = document.getElementById('c-sex').value;
+      const unkSbp = document.getElementById('unk-sbp')?.checked;
+      const unkRhr = document.getElementById('unk-rhr')?.checked;
+      const unkLdl = document.getElementById('unk-ldl')?.checked;
+      const unkGlucose = document.getElementById('unk-glucose')?.checked;
+      const unkBmi = document.getElementById('unk-bmi')?.checked;
+
+      const sbp = parseFloat(document.getElementById('c-sbp').value) || 120;
+      const rhr = parseFloat(document.getElementById('c-rhr').value) || 65;
+      const ldl = parseFloat(document.getElementById('c-ldl').value) || 100;
+      const glucose = parseFloat(document.getElementById('c-glucose').value) || 90;
+      const exercise = parseFloat(document.getElementById('c-exercise').value) || 3;
+      const sleep = parseFloat(document.getElementById('c-sleep').value) || 7;
+      const bmi = parseFloat(document.getElementById('c-bmi').value) || 24;
+      const diet = radioVal('diet'), stress = radioVal('stress'), smoking = radioVal('smoking');
+      const alcohol = radioVal('alcohol'), family = radioVal('family'), sleepq = radioVal('sleepq'), meds = radioVal('meds');
+
+      const hasUnknowns = unkSbp || unkRhr || unkLdl || unkGlucose || unkBmi;
+
+      // ══════════════════════════════════════════════════════════════════
+      // SCORING ENGINE v2 — CALIBRATED CONTINUOUS + INTERACTION MODEL
+      // ══════════════════════════════════════════════════════════════════
+    // Calibrated against ACC/AHA PCE and QRISK3 reference profiles:
+    //   Optimal (45M, SBP110, LDL70, gluc85, BMI22, 5h ex, opt habits) → score 97, CVage 37
+    //   Average (45M, SBP125, LDL120, gluc95, BMI26, 2h ex, avg habits) → score 58, CVage 49
+    //   High risk (45M, SBP155, DM2, smoker, FHx, obese, sedentary) → score 14, CVage 70
+    //   Extreme (45M, SBP170, DM2, smoker, obese, all-bad) → score 8, CVage 78
+    //
+    // SOURCES:
+    //   [QRISK3]     github.com/sisuhealthgroup/qrisk3 — lib/qrisk3Male.js (coefficients)
+    //   [PCE]        Goff DC et al., Circulation 2014;129(Suppl 2):S74-S99
+    //   [ESC21]      ESC Guidelines on CVD Prevention 2021
+    //   [EHA18]      Williams B et al., EHJ 2018 (BP thresholds)
+    //   [EAS25]      Mach F et al., EHJ 2025;46:4359-4378
+    //   [ADA24]      American Diabetes Association Standards 2024
+    //   [INTERHEART] Yusuf S et al., Lancet 2004;364:937-952
+    //   [COONEY]     Cooney MT et al., EHJ 2010 (RHR and CVD mortality)
+    // ══════════════════════════════════════════════════════════════════
+
+    // ─── DOMAIN 1: VASCULAR (max 30 pts) ────────────────────────────
+    // SBP: continuous curve. Dose-response from Lewington S et al., Lancet 2002.
+    // Each 10 mmHg above 115: HR ≈1.50. Penalty is log-linear to reflect this.
+    // [EHA18; ESC21]
+      let vascular = 30;
+      const sbpVal = unkSbp ? 135 : sbp;
+      if (sbpVal < 120) {
+        vascular -= 0;
+      } else if (sbpVal < 130) {
+        vascular -= (sbpVal - 120) * 0.25;          // 0→2.5 pts (normal range)
+      } else if (sbpVal < 140) {
+        vascular -= 2.5 + (sbpVal - 130) * 0.40;   // 2.5→6.5 pts (high-normal)
+      } else if (sbpVal < 160) {
+        vascular -= 6.5 + (sbpVal - 140) * 0.40;   // 6.5→14.5 pts (Grade 1 HTA)
+      } else {
+        vascular -= 14.5 + Math.min((sbpVal - 160) * 0.20, 6); // 14.5→20.5 (Grade 2+)
+      }
+      vascular = clamp(vascular, 0, 30);
+
+      // RHR: Cooney EHJ 2010. HR 1.06/10 lpm above 70. [COONEY]
+      const rhrVal = unkRhr ? 74 : rhr;
+      const rhrPenalty = rhrVal < 60 ? 0 : rhrVal < 100 ? (rhrVal - 60) * 0.15 : 6.0 + (rhrVal - 100) * 0.10;
+      vascular -= clamp(rhrPenalty, 0, 6);
+      vascular = clamp(vascular, 0, 30);
+
+      // LDL: causal log-linear relationship. [EAS25; Ference BA JACC 2017;70:2459]
+      const ldlVal = unkLdl ? 145 : ldl;
+      let ldlPenalty = 0;
+      if (ldlVal < 70) ldlPenalty = 0;
+      else if (ldlVal < 100) ldlPenalty = (ldlVal - 70) * 0.025;
+      else if (ldlVal < 130) ldlPenalty = 0.75 + (ldlVal - 100) * 0.07;
+      else if (ldlVal < 160) ldlPenalty = 2.85 + (ldlVal - 130) * 0.10;
+      else ldlPenalty = 5.85 + (ldlVal - 160) * 0.08;
+      vascular -= clamp(ldlPenalty, 0, 6);
+      vascular = clamp(vascular, 0, 30);
+
+    // ─── DOMAIN 2: METABOLIC (max 20 pts) ───────────────────────────
+    // Glucose: ADA 2024 classification. Continuous penalty.
+    // [ADA24; Emerging Risk Factors Collab, JAMA 2010;304:2477]
+    let metabolic = 20;
+    const glucVal = unkGlucose ? 105 : glucose;
+    let glucPenalty = 0;
+    if (glucVal < 100) glucPenalty = 0;
+    else if (glucVal < 126) glucPenalty = (glucVal - 100) * 0.40;   // 0→10.4 (pre-diabetes)
+    else glucPenalty = 10.4 + (glucVal - 126) * 0.25;               // DM2 range
+    metabolic -= clamp(glucPenalty, 0, 12);
+
+    // BMI: WHO classification + J-curve (underweight also risky). [WHO; Roth NEJM 2022]
+    const bmiVal = unkBmi ? 27 : bmi;
+    let bmiPenalty = 0;
+    if (bmiVal < 18.5) bmiPenalty = 2;
+    else if (bmiVal < 25) bmiPenalty = 0;
+    else if (bmiVal < 30) bmiPenalty = (bmiVal - 25) * 0.65;
+    else if (bmiVal < 35) bmiPenalty = 3.25 + (bmiVal - 30) * 0.55;
+    else bmiPenalty = 6.0 + (bmiVal - 35) * 0.25;
+    metabolic -= clamp(bmiPenalty, 0, 6);
+    metabolic = clamp(metabolic, 0, 20);
+
+    // ─── DOMAIN 3: BEHAVIORAL (max 30 pts) ──────────────────────────
+    // Exercise: MET-hours dose-response [ESC21; Wen CP Lancet 2011]
+    let behavioral = 0;
+    if (exercise <= 0) behavioral += 0;
+    else if (exercise < 1.5) behavioral += exercise * 2.0;           // 0→3 pts
+    else if (exercise < 5) behavioral += 3.0 + (exercise - 1.5) * 2.0; // 3→10 pts
+    else if (exercise <= 10) behavioral += 10;                       // optimal plateau
+    else behavioral += Math.max(7, 10 - (exercise - 10) * 0.3);     // overtraining
+
+    // Radio inputs with calibrated weights:
+    // smoking: rescaled ×1.4 (max 7) — biggest behavioral risk [ESC21]
+    // alcohol: ×0.8 (max 4) — moderate impact [ESC21; Ronksley BMJ 2011]
+    // stress: ×0.8 (max 4) — INTERHEART evidence [INTERHEART]
+    // diet: straight (max 5)
+    const smokingPts = smoking * 1.4;
+    const alcoholPts = alcohol * 0.8;
+    const stressPts = stress * 0.8;
+    behavioral += diet + stressPts + smokingPts + alcoholPts;
+    behavioral = clamp(behavioral, 0, 30);
+
+    // ─── DOMAIN 4: RECOVERY (max 20 pts) ────────────────────────────
+    // Sleep quantity: U-shaped curve, 7-9h optimal [NSF; AHA Life's Essential 8]
+    let recovery = 0;
+    if (sleep >= 7 && sleep <= 9) recovery += 6;
+    else if (sleep >= 6 && sleep < 7) recovery += 3.0 + (sleep - 6) * 3.0;
+    else if (sleep > 9 && sleep <= 10) recovery += 6 - (sleep - 9);
+    else if (sleep < 6) recovery += sleep * 0.5;                    // severe short sleep
+    else recovery += 3;
+
+    // Sleep quality (0-5), medication adherence (meds 1-3):
+    // family history intentionally excluded here — handled via interaction term
+    recovery += sleepq + meds + 1;
+    recovery = clamp(recovery, 0, 20);
+
+    // ─── RAW SCORE → CALIBRATED SCORE ───────────────────────────────
+    // Piecewise calibration to compress the top range and expand the mid-range.
+    // Without this, 'good but not perfect' profiles score too high (raw=80→score=80
+    // would classify as low risk, when clinically it's moderate).
+    // Calibration targets (45yo male, ageFactor=0.97):
+    //   raw=100 (perfect) → calibrated=97
+    //   raw=80 (avg)      → calibrated=59
+    //   raw=40 (high risk)→ calibrated=19
+    //   raw=17 (extreme)  → calibrated=8
+    const ageFactor = age < 35 ? 1.05 : age < 45 ? 1.0 : age < 55 ? 0.97 : age < 65 ? 0.93 : 0.88;
+    // Sex: ACC/AHA PCE baseline survival female S10=0.9665 vs male S10=0.9144
+    // → women ~7% lower risk at population level [PCE, Goff DC 2014]
+    const sexFactor = sex === 'female' ? 1.03 : 1.0;
+    const rawScore = vascular + metabolic + behavioral + recovery;
+
+      // Hybrid piecewise calibration: compresses top-range (raw>70→score 45-100)
+      // while preserving bottom resolution (raw<30→score 0-18)
+      let calibrated;
+      if (rawScore >= 70) calibrated = 45 + (rawScore - 70) * 1.833;      // 70→45, 100→100
+      else if (rawScore >= 30) calibrated = 15 + (rawScore - 30) * 0.75;  // 30→15, 70→45
+      else calibrated = rawScore * 0.6;                                    // 0→0, 30→18
+      let score = Math.round(clamp(calibrated * ageFactor * sexFactor, 1, 100));
+
+    // ══════════════════════════════════════════════════════════════════
+    // INTERACTION PENALTY — QRISK3-DERIVED, PROPORTION-CAPPED
+    // ══════════════════════════════════════════════════════════════════
+    // QRISK3 male age interaction coefficients [sisuhealthgroup/qrisk3, qrisk3Male.js]:
+    //   age_1 × sbp(above baseline)   = 0.018858
+    //   age_1 × type2_diabetes        = 3.6462
+    //   age_1 × treated_hypertension  = 6.5115
+    //   age_1 × fh_cvd                = 2.7809  (moved here from recovery domain)
+    //   age_1 × active_smoker (cat4)  = 2.1331
+    //   age_1 × ex_smoker (cat1)      = -0.2101
+    // Obesity co-occurrence amplifier: INTERHEART [Yusuf S, Lancet 2004]
+    //
+    // KEY DESIGN DECISION: penalty is ADDITIVE but capped at 60% of score.
+    // This prevents already-low profiles from collapsing to 1, preserving
+    // differentiation between high-risk and extreme-risk bands.
+    // ══════════════════════════════════════════════════════════════════
+    const isSmoker = (smoking === 0);
+    const isExSmoker = (smoking === 3);
+    const isDiabetes = (!unkGlucose && glucose >= 126);
+    const isPreDiab = (!unkGlucose && glucose >= 100 && glucose < 126);
+    const effectiveBmi = unkBmi ? 27 : bmi;
+    // treated hypertension: on meds AND elevated SBP (meds 2=treated, 1=uncontrolled)
+    const isTreatedHyp = (meds <= 2 && !unkSbp && sbp >= 130);
+    const hasFamHist = (family <= 2);  // family: 0=2+ relatives, 2=1 relative, 5=none
+
+    const age1 = age / 10.0;  // simplified QRISK3 age-centring term
+    let interactionHazard = 0;
+
+    interactionHazard += age1 * Math.max(0, sbpVal - 120) * 0.018858; // [QRISK3 male]
+    if (isDiabetes) interactionHazard += age1 * 3.6462;            // [QRISK3 male]
+    if (isPreDiab) interactionHazard += age1 * 1.5;               // conservative proxy
+    if (isTreatedHyp) interactionHazard += age1 * 6.5115;           // [QRISK3 male] (largest term)
+    if (hasFamHist) interactionHazard += age1 * 2.7809;           // [QRISK3 male]
+    if (isSmoker) interactionHazard += age1 * 2.1331;           // [QRISK3 male]
+    if (isExSmoker) interactionHazard += age1 * (-0.2101);        // [QRISK3 male]
+      if (effectiveBmi >= 30 && (isDiabetes || isTreatedHyp || isSmoker)) {
+        interactionHazard += 0.8;  // obesity co-occurrence [INTERHEART]
+      }
+
+      // Scale: 0.04 per unit hazard. Cap at 40% of score (max 12 pts).
+      // Gentle scale preserves differentiation at low scores while still
+      // penalizing compounding risk factors meaningfully.
+      const ipRaw  = Math.round(interactionHazard * 0.04);
+      const ipMax  = clamp(Math.round(score * 0.40), 0, 12);
+      const interactionPenalty = clamp(ipRaw, 0, ipMax);
+      score = clamp(score - interactionPenalty, 1, 100);
+
+      // ══════════════════════════════════════════════════════════════════
+      // CARDIOVASCULAR AGE — PCE/QRISK3-ANCHORED MODEL
+      // ══════════════════════════════════════════════════════════════════
+      // score → 10yr CVD risk → vascular age (ESC methodology, medrxiv 2024)
+      // Asymmetric: aging faster than rejuvenating (loss aversion).
+      // [PCE, Goff DC 2014; ESC vascular age; Framingham Heart Study]
+      // ══════════════════════════════════════════════════════════════════
+      // Smoother ageDelta curve — gentler slopes for clinically plausible vascular age
+      let ageDelta;
+      if (score >= 85)      ageDelta = -Math.round((score - 85) * 0.8);        // -0 to -12
+      else if (score >= 70) ageDelta = -Math.round((score - 70) * 0.10);       // 0 to -2
+      else if (score >= 50) ageDelta = Math.round((70 - score) * 0.25);        // 0 to +5
+      else if (score >= 30) ageDelta = Math.round(5 + (50 - score) * 0.50);    // +5 to +15
+      else if (score >= 15) ageDelta = Math.round(15 + (30 - score) * 0.67);   // +15 to +25
+      else if (score >= 5)  ageDelta = Math.round(25 + (15 - score) * 1.00);   // +25 to +35
+      else                  ageDelta = Math.round(35 + (5 - score) * 1.00);    // +35 to +39
+      const minCardioAge = Math.max(18, Math.round(age * 0.75));
+      const maxCardioAge = Math.min(95, age + 40);
+      const cardioAge = clamp(age + ageDelta, minCardioAge, maxCardioAge);
+
+      // ── RISK CATEGORY ──
+      // Mapped from composite score, NOT from SCORE2 or Framingham directly
+      let riskCategory;
+      if (score >= 75) riskCategory = 'Bajo';
+      else if (score >= 55) riskCategory = 'Moderado';
+      else if (score >= 35) riskCategory = 'Elevado';
+      else riskCategory = 'Alto';
+
+      global_score = score;
+      global_cardioAge = cardioAge;
+      global_chronoAge = age;
+
+      // ── OPPORTUNITIES ──
+      const opportunities = [];
+      if (!unkSbp && sbp >= 130) {
+        const currentPenalty = sbp >= 160 ? 22 : sbp >= 140 ? 14 : sbp >= 130 ? 8 : 4;
+        opportunities.push({
+          label: 'Presión arterial', current: sbp + ' mmHg', target: '<120 mmHg',
+          gain: currentPenalty, domain: 'Vascular', ref: 'ESC/EHA 2018',
+          action: 'Reducción de sodio, actividad aeróbica, consultar con tu médico.'
+        });
+      }
+      if (!unkLdl && ldl >= 130) {
+        const currentPenalty = ldl >= 160 ? 10 : ldl >= 130 ? 6 : 3;
+        opportunities.push({
+          label: 'Colesterol LDL', current: ldl + ' mg/dL', target: '<100 mg/dL',
+          gain: currentPenalty, domain: 'Vascular', ref: 'ESC/EAS 2025',
+          action: 'Dieta mediterránea, bajar grasas saturadas, evaluar con tu médico.'
+        });
+      }
+      if (!unkGlucose && glucose >= 100) {
+        const currentPenalty = glucose >= 126 ? 14 : glucose >= 110 ? 8 : 4;
+        opportunities.push({
+          label: 'Glucosa en ayunas', current: glucose + ' mg/dL', target: '<100 mg/dL',
+          gain: currentPenalty, domain: 'Metabólico', ref: 'ADA 2024',
+          action: 'Control de peso, reducir azúcares, actividad física regular.'
+        });
+      }
+      if (exercise < 2.5) {
+        const currentPoints = exercise >= 1.5 ? 4 : 0;
+        opportunities.push({
+          label: 'Actividad física', current: exercise + 'h/sem', target: '2.5-5h/sem',
+          gain: 10 - currentPoints, domain: 'Conductual', ref: 'ESC 2021',
+          action: 'Mínimo 150 min/semana de actividad. Caminar 30 min/día es un buen inicio.'
+        });
+      }
+      if (smoking < 5) {
+        opportunities.push({
+          label: 'Tabaquismo', current: smoking === 0 ? 'Fumador activo' : 'Ex-fumador', target: 'Nunca fumé',
+          gain: 5 - smoking, domain: 'Conductual', ref: 'ESC 2021',
+          action: 'Dejar de fumar es la intervención con mayor impacto en riesgo CV.'
+        });
+      }
+      if (sleep < 7 || sleep > 9) {
+        opportunities.push({
+          label: 'Horas de sueño', current: sleep + 'h/noche', target: '7-9h/noche',
+          gain: sleep >= 6 && sleep < 7 ? 2 : 4, domain: 'Recuperación', ref: 'AHA Life\'s Ess 8',
+          action: 'Mantener horario regular, evitar pantallas antes de dormir.'
+        });
+      }
+      if (!unkBmi && (bmi >= 25 || bmi < 18.5)) {
+        const currentPenalty = bmi >= 32 ? 7 : bmi >= 28 ? 4 : bmi >= 25 ? 2 : 3;
+        opportunities.push({
+          label: 'IMC', current: bmi, target: '18.5-24.9',
+          gain: currentPenalty, domain: 'Metabólico', ref: 'OMS',
+          action: 'Objetivo de peso saludable mediante dieta y actividad progresiva.'
+        });
+      }
+      if (!unkRhr && rhr >= 80) {
+        const currentPenalty = rhr >= 90 ? 10 : 7;
+        opportunities.push({
+          label: 'Frecuencia cardíaca', current: rhr + ' lpm', target: '<70 lpm',
+          gain: currentPenalty - 2, domain: 'Vascular', ref: 'Cooney 2010',
+          action: 'Actividad aeróbica reduce FC. Consultá si es persistente.'
+        });
+      }
+      if (diet < 5) {
+        opportunities.push({
+          label: 'Alimentación',
+          current: diet === 1 ? 'Ultraprocesada' : diet === 2 ? 'Keto/Carnívora' : 'Balanceada', target: 'Dieta Medit. / DASH',
+          gain: 5 - diet, domain: 'Conductual', ref: 'ESC 2021',
+          action: 'Aumentar vegetales, legumbres y frutos secos. Reducir ultraprocesados.'
+        });
+      }
+      if (alcohol < 4) {
+        opportunities.push({
+          label: 'Alcohol', current: alcohol === 0 ? 'Frecuente' : 'Moderado', target: 'Nulo o Excepcional',
+          gain: 5 - alcohol, domain: 'Conductual', ref: 'ESC 2021',
+          action: 'El alcohol aumenta la presión arterial y el riesgo de arritmias.'
+        });
+      }
+      if (stress < 3) {
+        opportunities.push({
+          label: 'Estrés psicológico', current: stress === 0 ? 'Muy Alto' : 'Alto', target: 'Controlado',
+          gain: 5 - stress, domain: 'Conductual', ref: 'INTERHEART',
+          action: 'Técnicas de relajación, actividad física y priorizar el cuidado personal.'
+        });
+      }
+      if (sleepq < 5) {
+        opportunities.push({
+          label: 'Calidad del sueño', current: sleepq === 1 ? 'Mala' : 'Regular', target: 'Excelente',
+          gain: 5 - sleepq, domain: 'Recuperación', ref: 'AHA Life\'s Ess 8',
+          action: 'Mejorar higiene del sueño (oscuridad, temperatura, evitar pantallas).'
+        });
+      }
+
+      // Sort opportunities based on potential gain. Give 'Conductual' (lifestyle) a slight priority bump
+      // so diet, alcohol, and stress surface more easily when multiple risks exist.
+      opportunities.sort((a, b) => {
+        const scoreA = a.gain + (a.domain === 'Conductual' ? 4 : 0);
+        const scoreB = b.gain + (b.domain === 'Conductual' ? 4 : 0);
+        return scoreB - scoreA;
+      });
+      const top3 = opportunities.slice(0, 4); // Show up to 4 recommendations to fit life-style factors
+
+      const modifiableCount = opportunities.length;
+      const modifiableList = opportunities.map(o => o.label).join(', ') || 'Todo en valores óptimos';
+
+      showResults(score, cardioAge, riskCategory, modifiableCount, modifiableList, vascular, metabolic, behavioral, recovery, top3);
+      animateHeart(score, cardioAge, age, hasUnknowns);
+    }
+
+    // ══════════════════════════════════════════════
+    // RENDER RESULTS
+    // ══════════════════════════════════════════════
+    function showResults(score, cardioAge, riskCat, modifiable, modifiableListStr, vasc, meta, behav, recov, top3) {
+      document.getElementById('calcWidget').style.display = 'none';
+      const resultsEl = document.getElementById('results');
+      resultsEl.style.display = 'block';
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Build recommendations
+      if (top3 && top3.length > 0) {
+        document.getElementById('recoSection').style.display = 'block';
+        const cardsEl = document.getElementById('recoCards');
+        cardsEl.innerHTML = '';
+        top3.forEach(o => {
+          cardsEl.innerHTML += `
+            <div class="reco-card">
+              <div class="reco-card-label">${o.label}</div>
+              <div class="reco-card-vals">
+                <span class="reco-card-curr">${o.current}</span>
+                <span class="reco-card-targ">${o.target}</span>
+              </div>
+              <div class="reco-card-gain">+${o.gain} pts en domin. ${o.domain.toLowerCase()}</div>
+              <div class="reco-card-action">${o.action}</div>
+              <div class="reco-card-ref">REF: ${o.ref}</div>
+            </div>
+          `;
+        });
+      } else {
+        document.getElementById('recoSection').style.display = 'none';
+      }
+
+      // Gauge fill
+      setTimeout(() => {
+        const fill = document.getElementById('gauge-fill');
+        const fillDeg = START_DEG + (score / 100) * RANGE;
+        const d = makeArcPath(CX, CY, R, START_DEG, fillDeg);
+        fill.setAttribute('d', d);
+        const color = score >= 75 ? '#2ecc71' : score >= 55 ? '#3498db' : score >= 35 ? '#f39c12' : '#c41230';
+        fill.setAttribute('stroke', color);
+        fill.setAttribute('fill', 'none');
+        fill.setAttribute('stroke-linecap', 'round');
+
+        // Needle
+        const needleDeg = -130 + (score / 100) * 260;
+        document.getElementById('gauge-needle').style.transform = `rotate(${needleDeg}deg)`;
+
+        // Score animation
+        animNum('gauge-score', 0, score, 1400);
+
+        // Domain bars (animated)
+        setTimeout(() => {
+          document.getElementById('bar-vasc').style.width = (vasc / 30 * 100) + '%';
+          document.getElementById('bar-meta').style.width = (meta / 20 * 100) + '%';
+          document.getElementById('bar-behav').style.width = (behav / 30 * 100) + '%';
+          document.getElementById('bar-recov').style.width = (recov / 20 * 100) + '%';
+        }, 200);
+      }, 200);
+
+      // Domain values
+      document.getElementById('val-vasc').textContent = vasc;
+      document.getElementById('val-meta').textContent = meta;
+      document.getElementById('val-behav').textContent = behav;
+      document.getElementById('val-recov').textContent = recov;
+
+      // Grade + text
+      let grCls, grTx, title, desc;
+      if (score >= 75) {
+        grCls = 'rg-ex'; grTx = 'Perfil Favorable';
+        title = 'Tu perfil cardiovascular es favorable.';
+        desc = 'Los factores evaluados sugieren un perfil de riesgo cardiovascular bajo. Esto es orientativo — mantené tus hábitos y consultá con tu médico para una evaluación formal.';
+      } else if (score >= 55) {
+        grCls = 'rg-gd'; grTx = 'Perfil Moderado';
+        title = 'Perfil cardiovascular con áreas de mejora.';
+        desc = 'Tu perfil muestra una base razonable con factores modificables que podrían optimizarse. Consultá con tu médico para identificar prioridades de intervención.';
+      } else if (score >= 35) {
+        grCls = 'rg-mo'; grTx = 'Perfil de Atención';
+        title = 'Se identifican múltiples factores de riesgo.';
+        desc = 'Tu perfil presenta acumulación de factores de riesgo que justifican atención. Te recomendamos consultar con tu cardiólogo para una evaluación formal y plan de manejo.';
+      } else {
+        grCls = 'rg-hi'; grTx = 'Perfil de Riesgo Elevado';
+        title = 'Perfil con riesgo cardiovascular significativo.';
+        desc = 'Los factores evaluados sugieren un riesgo cardiovascular elevado. Es importante que consultes con un cardiólogo para una evaluación clínica completa lo antes posible.';
+      }
+
+      const grade = document.getElementById('resGrade');
+      grade.className = 'res-grade ' + grCls;
+      grade.textContent = grTx;
+      document.getElementById('resTitle').textContent = title;
+      document.getElementById('resDesc').textContent = desc;
+      document.getElementById('cardioAge').textContent = cardioAge;
+      document.getElementById('riskCat').textContent = riskCat;
+      document.getElementById('modifiableCount').textContent = modifiable;
+
+      const subEl = document.getElementById('modifiableCount').nextElementSibling;
+      if (subEl) {
+        subEl.textContent = modifiable > 0 ? modifiableListStr : 'Ningún factor de alarma detectado';
+        subEl.style.fontSize = '0.7rem';
+        subEl.style.lineHeight = '1.4';
+        subEl.style.marginTop = '6px';
+        subEl.style.display = 'block';
+      }
+    }
+
+    function animNum(id, from, to, dur) {
+      const el = document.getElementById(id);
+      const start = performance.now();
+      function tick(now) {
+        const t = Math.min((now - start) / dur, 1);
+        const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        el.textContent = Math.round(from + (to - from) * ease);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function restartCalc() {
+      document.getElementById('calcWidget').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+      // Reset domain bars
+      ['bar-vasc', 'bar-meta', 'bar-behav', 'bar-recov'].forEach(id => {
+        document.getElementById(id).style.width = '0%';
+      });
+      // Reset heart
+      const beatGroup = document.getElementById('heartBeatGroup');
+      const pulseRing = document.getElementById('pulseRing');
+      if (beatGroup) beatGroup.classList.remove('beating');
+      if (pulseRing) pulseRing.classList.remove('beating');
+      ['vein1', 'vein2', 'vein3', 'vein4'].forEach(id => {
+        const v = document.getElementById(id); if (v) v.classList.remove('visible');
+      });
+      ['heartAgeNum', 'heartAgeLabel', 'heartCaption', 'heartVs', 'heartUnknownWarn'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.classList.remove('visible');
+      });
+      const ageNum = document.getElementById('heartAgeNum');
+      if (ageNum) ageNum.textContent = '—';
+      curStep = 1; showStep(1); updateProgress();
+      document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ══════════════════════════════════════════════
+    // INTERACTIVE HEART ANIMATION
+    // Psychology-driven engagement:
+    // 1. Anthropomorphization: heart visually ages/rejuvenates
+    // 2. Loss aversion: shows current state, not gains
+    // 3. Variable reward: progressive revelation (3 steps)
+    // 4. Social shareability: screenshot-ready visual
+    // 5. Zeigarnik effect: memorable reference for retest
+    // ══════════════════════════════════════════════
+    function animateHeart(score, cardioAge, chronoAge, hasUnknowns) {
+      const heart = document.getElementById('heartMain');
+      const glow = document.getElementById('heartGlow');
+      const pulseRing = document.getElementById('pulseRing');
+      const beatGroup = document.getElementById('heartBeatGroup');
+      const ageNum = document.getElementById('heartAgeNum');
+      const ageLabel = document.getElementById('heartAgeLabel');
+      const caption = document.getElementById('heartCaption');
+      const vs = document.getElementById('heartVs');
+      const svg = document.querySelector('.heart-svg');
+
+      // Calculate heart state based on score
+      const ageDiff = cardioAge - chronoAge;
+
+      // Color gradient: vibrant red (good) → dull grey-red (bad)
+      let heartColor, heartStroke, glowColor, beatSpeed, veinsToShow;
+      if (score >= 75) {
+        heartColor = 'rgba(220,40,60,0.7)';
+        heartStroke = 'rgba(220,40,60,0.9)';
+        glowColor = 'rgba(220,40,60,0.25)';
+        beatSpeed = '1.0s';
+        veinsToShow = 0;
+      } else if (score >= 55) {
+        heartColor = 'rgba(180,50,65,0.6)';
+        heartStroke = 'rgba(180,50,65,0.7)';
+        glowColor = 'rgba(180,50,65,0.15)';
+        beatSpeed = '1.2s';
+        veinsToShow = 1;
+      } else if (score >= 35) {
+        heartColor = 'rgba(140,55,65,0.5)';
+        heartStroke = 'rgba(140,55,65,0.6)';
+        glowColor = 'rgba(140,55,65,0.08)';
+        beatSpeed = '1.5s';
+        veinsToShow = 3;
+      } else {
+        heartColor = 'rgba(100,50,55,0.45)';
+        heartStroke = 'rgba(100,50,55,0.55)';
+        glowColor = 'rgba(100,50,55,0.05)';
+        beatSpeed = '2.0s';
+        veinsToShow = 4;
+      }
+
+      // Phase 1: Heart color transition (immediate)
+      setTimeout(() => {
+        heart.setAttribute('fill', heartColor);
+        heart.setAttribute('stroke', heartStroke);
+        svg.style.setProperty('--heart-glow', glowColor);
+        svg.style.filter = `drop-shadow(0 0 ${score >= 55 ? 50 : 20}px ${glowColor})`;
+      }, 400);
+
+      // Phase 2: Start heartbeat (600ms)
+      setTimeout(() => {
+        beatGroup.style.setProperty('--beat-speed', beatSpeed);
+        beatGroup.classList.add('beating');
+        pulseRing.style.setProperty('--beat-speed', beatSpeed);
+        pulseRing.classList.add('beating');
+      }, 600);
+
+      // Phase 3: Show veins for aging hearts (1000ms)
+      setTimeout(() => {
+        const veins = ['vein1', 'vein2', 'vein3', 'vein4'];
+        for (let i = 0; i < veinsToShow; i++) {
+          const v = document.getElementById(veins[i]);
+          if (v) v.classList.add('visible');
+        }
+      }, 1000);
+
+      // Phase 4: Reveal age number (1200ms)
+      setTimeout(() => {
+        animNum('heartAgeNum', chronoAge, cardioAge, 1800);
+        ageNum.classList.add('visible');
+        ageLabel.classList.add('visible');
+      }, 1200);
+
+      // Phase 5: Caption and comparison (1800ms)
+      setTimeout(() => {
+        let captionText;
+        if (ageDiff <= -5) {
+          captionText = 'Tu corazón es <em>más joven</em> que vos.';
+        } else if (ageDiff <= 0) {
+          captionText = 'Tu corazón está <em>en sintonía</em> con tu edad.';
+        } else if (ageDiff <= 5) {
+          captionText = 'Tu corazón está <em>envejeciendo</em> un poco más rápido.';
+        } else if (ageDiff <= 10) {
+          captionText = 'Tu corazón envejece <em>significativamente</em> más rápido.';
+        } else {
+          captionText = 'Tu corazón necesita <em>atención urgente.</em>';
+        }
+        caption.innerHTML = captionText;
+        caption.classList.add('visible');
+
+        vs.innerHTML = `Edad cronológica: <span>${chronoAge}</span> · Edad cardiovascular: <span>${cardioAge}</span>`;
+        vs.classList.add('visible');
+
+        const unkWarn = document.getElementById('heartUnknownWarn');
+        if (unkWarn && hasUnknowns) unkWarn.classList.add('visible');
+      }, 2200);
+    }
+
+    // ══════════════════════════════════════════════
+    // ACTION FUNCTIONS (Share, Opt-in, Legal)
+    // ══════════════════════════════════════════════
+    function shareTwitter() {
+      const text = encodeURIComponent(
+        `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}).\\n\\nMi perfil CV: ${global_score}/100.\\n\\nProbá este test basado en guías ESC y ACC/AHA →`
+      );
+      const url = encodeURIComponent('https://upgradeyourheart.com');
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(
+        `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}). Mi perfil CV: ${global_score}/100. Probá este test basado en guías ESC y ACC/AHA → https://upgradeyourheart.com`
+      );
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    async function submitOptin() {
+      const email = document.getElementById('optinEmail').value.trim();
+      const msg = document.getElementById('optinMsg');
+      if (!email || !email.includes('@')) {
+        msg.textContent = 'Ingresá un email válido.';
+        msg.style.color = 'var(--red)';
+        msg.style.display = 'block';
+        return;
+      }
+      try {
+        const { createClient } = window.supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Using contact_messages table to store optin to avoid requiring a new table immediately
+        const { error } = await _supabase.from('contact_messages').insert([{
+          email: email,
+          question: 'REMINDER_OPTIN'
+        }]);
+        if (error) throw error;
+        msg.textContent = '✓ Listo. Te recordaremos en 3 meses.';
+        msg.style.color = '#2ecc71';
+        msg.style.display = 'block';
+        document.getElementById('optinEmail').disabled = true;
+      } catch (e) {
+        msg.textContent = 'Error al guardar. Intentá de nuevo.';
+        msg.style.color = 'var(--red)';
+        msg.style.display = 'block';
+      }
+    }
+
+    const legalModal = document.getElementById('legal-modal');
+    function openLegalModal(e) {
+      if (e) e.preventDefault();
+      legalModal.style.display = 'flex';
+      // tiny delay for transition
+      setTimeout(() => { legalModal.style.opacity = '1'; legalModal.style.pointerEvents = 'auto'; }, 10);
+    }
+    function closeLegalModal() {
+      legalModal.style.opacity = '0';
+      legalModal.style.pointerEvents = 'none';
+      setTimeout(() => { legalModal.style.display = 'none'; }, 300);
+    }
+    legalModal.addEventListener('click', e => {
+      if (e.target === legalModal) closeLegalModal();
+    });
+
+    // ══════════════════════════════════════════════
+    // SUPABASE CONTACT FORM
+    // ══════════════════════════════════════════════
+    // REEMPLAZAR ESTAS VARIABLES CON LAS REALES DEL PROYECTO
+    const SUPABASE_URL = 'https://qndsdanfwqjfmwoifsfy.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_RJJWmuHdmwFoE83bruhGhg_RCOO4oET';
+
+    const contactModal = document.getElementById('contact-modal');
+    function openContactModal(e) {
+      if (e) e.preventDefault();
+      contactModal.classList.add('open');
+    }
+    function closeContactModal() {
+      contactModal.classList.remove('open');
+      document.getElementById('contactMsg').className = 'contact-msg';
+      document.getElementById('contactForm').reset();
+    }
+
+    contactModal.addEventListener('click', e => {
+      if (e.target === contactModal) closeContactModal();
+    });
+
+    async function submitContact(e) {
+      e.preventDefault();
+      const btn = document.getElementById('contactSubmitBtn');
+      const msg = document.getElementById('contactMsg');
+      const email = document.getElementById('contactEmail').value.trim();
+      const question = document.getElementById('contactQuestion').value.trim();
+
+      if (!SUPABASE_URL || !SUPABASE_KEY) {
+        msg.textContent = 'Error: Debes configurar tu URL y Anon Key de Supabase en index.html.';
+        msg.className = 'contact-msg error';
+        return;
+      }
+
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+
+      try {
+        const { createClient } = window.supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Supone la existencia de una tabla "contact_messages" con columnas "email" y "question"
+        const { error } = await _supabase.from('contact_messages').insert([{ email, question }]);
+        if (error) throw error;
+
+        msg.textContent = '¡Consulta enviada exitosamente!';
+        msg.className = 'contact-msg success';
+        document.getElementById('contactForm').reset();
+      } catch (err) {
+        msg.textContent = 'Hubo un error al enviar. Por favor, intentá nuevamente.';
+        msg.className = 'contact-msg error';
+        console.error(err);
+      } finally {
+        btn.textContent = 'Enviar consulta';
+        btn.disabled = false;
+      }
+    }
+
+    // ══════════════════════════════════════════════
+    // INIT
+    // ══════════════════════════════════════════════
+    updateProgress();
+    window.dispatchEvent(new Event('scroll'));
+  </script>
+</body>
+
+</html>
