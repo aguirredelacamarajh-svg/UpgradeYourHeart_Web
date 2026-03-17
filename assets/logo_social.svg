@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#FAF9F6" />
+  <g transform="translate(540, 540) scale(12)">
+    <path d="M40 20 C40 10 30 10 25 20 C20 10 10 10 10 20 C10 35 25 50 25 50 C25 50 40 35 40 20" 
+          fill="none" stroke="#c41230" stroke-width="2.5" stroke-linecap="round" 
+          transform="translate(-25, -28)" />
+    <path d="M5 30 L15 30 L18 20 L22 40 L25 5 L28 45 L32 30 L45 30" 
+          fill="none" stroke="#c41230" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+          transform="translate(-25, -28)" />
+  </g>
+  <text x="540" y="880" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="600" font-size="70" fill="#27272A" letter-spacing="0.1em">
+    UPGRADE
+  </text>
+  <text x="540" y="960" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-weight="400" font-size="75" font-style="italic" fill="#52525B" letter-spacing="0.12em">
+    YOUR <tspan fill="#c41230" font-style="normal" font-weight="700">HEART</tspan>
+  </text>
+</svg>

@@ -90,7 +90,7 @@ function drawGaugeTicks() {
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', inner.x); line.setAttribute('y1', inner.y);
     line.setAttribute('x2', outer.x); line.setAttribute('y2', outer.y);
-    line.setAttribute('stroke', 'rgba(240,235,227,0.25)'); line.setAttribute('stroke-width', '1.5');
+    line.setAttribute('stroke', 'rgba(0,0,0,0.25)'); line.setAttribute('stroke-width', '1.5');
     g.appendChild(line);
   }
   for (let v = 0; v <= 100; v += 5) {
@@ -101,7 +101,7 @@ function drawGaugeTicks() {
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', inner.x); line.setAttribute('y1', inner.y);
     line.setAttribute('x2', outer.x); line.setAttribute('y2', outer.y);
-    line.setAttribute('stroke', 'rgba(240,235,227,0.1)'); line.setAttribute('stroke-width', '1');
+    line.setAttribute('stroke', 'rgba(0,0,0,0.1)'); line.setAttribute('stroke-width', '1');
     g.appendChild(line);
   }
 }
@@ -772,19 +772,84 @@ function animateHeart(score, cardioAge, chronoAge, hasUnknowns) {
 // ══════════════════════════════════════════════
 // ACTION FUNCTIONS (Share, Opt-in, Legal)
 // ══════════════════════════════════════════════
+async function generateShareImage(type) {
+  // Populate templates
+  document.getElementById('tpl-ig-score').textContent = global_score;
+  document.getElementById('tpl-ig-age').textContent = global_cardioAge;
+  document.getElementById('tpl-post-score').textContent = global_score;
+  document.getElementById('tpl-post-age').textContent = global_cardioAge;
+
+  let riskStr = "";
+  if(global_score >= 75) riskStr = "Bajo";
+  else if(global_score >= 55) riskStr = "Moderado";
+  else if(global_score >= 35) riskStr = "Elevado";
+  else riskStr = "Alto";
+  document.getElementById('tpl-ig-cat').textContent = riskStr;
+  document.getElementById('tpl-post-cat').textContent = riskStr;
+
+  const targetId = type === 'ig' ? 'tpl-ig' : 'tpl-post';
+  const el = document.getElementById(targetId);
+  const canvas = await html2canvas(el, { scale: 2 });
+  return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+}
+
+async function handleShareAction(type, fallbackText, fallbackUrl) {
+  const btnStr = type === 'ig' ? '.share-ig' : (type === 'x' ? '.share-x' : '.share-wa');
+  const btn = document.querySelector(btnStr);
+  const oldText = btn.textContent;
+  btn.textContent = 'Generando...';
+  btn.disabled = true;
+
+  try {
+    const blob = await generateShareImage(type === 'ig' ? 'ig' : 'post');
+    const file = new File([blob], `UpgradeYourHeart-${global_cardioAge}años.png`, { type: 'image/png' });
+    const shareData = {
+      title: 'Mi Perfil CV - UpgradeYourHeart',
+      text: fallbackText,
+      files: [file]
+    };
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share(shareData);
+    } else {
+      // Fallback: download the generated image
+      const dataUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `UpgradeYourHeart-${global_cardioAge}años.png`;
+      a.click();
+      URL.revokeObjectURL(dataUrl);
+
+      // And open the link intent for non-IG
+      if (fallbackUrl) {
+         setTimeout(() => { window.open(fallbackUrl, '_blank'); }, 500);
+      } else {
+         alert("La imagen ha sido descargada. Podés subirla a tu cuenta de Instagram manualmente.");
+      }
+    }
+  } catch(e) {
+    if(e.name !== "AbortError") console.error('Share error:', e);
+  } finally {
+    btn.textContent = oldText;
+    btn.disabled = false;
+  }
+}
+
 function shareTwitter() {
-  const text = encodeURIComponent(
-    `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}).\\n\\nMi perfil CV: ${global_score}/100.\\n\\nProbá este test basado en guías ESC y ACC/AHA →`
-  );
-  const url = encodeURIComponent('https://upgradeyourheart.com');
-  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  const text = `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}). Mi perfil CV: ${global_score}/100.\\n\\nProbá este test basado en guías ESC y ACC/AHA → https://upgradeyourheart.com`;
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  handleShareAction('x', text, url);
 }
 
 function shareWhatsApp() {
-  const text = encodeURIComponent(
-    `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}). Mi perfil CV: ${global_score}/100. Probá este test basado en guías ESC y ACC/AHA → https://upgradeyourheart.com`
-  );
-  window.open(`https://wa.me/?text=${text}`, '_blank');
+  const text = `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}). Mi perfil CV: ${global_score}/100.\\n\\nProbá este test basado en guías ESC y ACC/AHA → https://upgradeyourheart.com`;
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  handleShareAction('wa', text, url);
+}
+
+function shareInstagram() {
+  const text = `Mi edad cardiovascular estim. es ${global_cardioAge} años (tengo ${global_chronoAge}). Mi perfil CV: ${global_score}/100.`;
+  handleShareAction('ig', text, null);
 }
 
 async function submitOptin() {
