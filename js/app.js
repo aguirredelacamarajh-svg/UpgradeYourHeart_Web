@@ -534,20 +534,44 @@ function showResults(score, cardioAge, riskCat, modifiable, modifiableListStr, v
   if (top3 && top3.length > 0) {
     document.getElementById('recoSection').style.display = 'block';
     const cardsEl = document.getElementById('recoCards');
-    cardsEl.innerHTML = '';
+    cardsEl.textContent = '';
     top3.forEach(o => {
-      cardsEl.innerHTML += `
-        <div class="reco-card">
-          <div class="reco-card-label">${o.label}</div>
-          <div class="reco-card-vals">
-            <span class="reco-card-curr">${o.current}</span>
-            <span class="reco-card-targ">${o.target}</span>
-          </div>
-          <div class="reco-card-gain">+${o.gain} pts en domin. ${o.domain.toLowerCase()}</div>
-          <div class="reco-card-action">${o.action}</div>
-          <div class="reco-card-ref">REF: ${o.ref}</div>
-        </div>
-      `;
+      const card = document.createElement('div');
+      card.className = 'reco-card';
+
+      const label = document.createElement('div');
+      label.className = 'reco-card-label';
+      label.textContent = o.label;
+
+      const vals = document.createElement('div');
+      vals.className = 'reco-card-vals';
+      const curr = document.createElement('span');
+      curr.className = 'reco-card-curr';
+      curr.textContent = o.current;
+      const targ = document.createElement('span');
+      targ.className = 'reco-card-targ';
+      targ.textContent = o.target;
+      vals.appendChild(curr);
+      vals.appendChild(targ);
+
+      const gain = document.createElement('div');
+      gain.className = 'reco-card-gain';
+      gain.textContent = '+' + o.gain + ' pts en domin. ' + o.domain.toLowerCase();
+
+      const action = document.createElement('div');
+      action.className = 'reco-card-action';
+      action.textContent = o.action;
+
+      const ref = document.createElement('div');
+      ref.className = 'reco-card-ref';
+      ref.textContent = 'REF: ' + o.ref;
+
+      card.appendChild(label);
+      card.appendChild(vals);
+      card.appendChild(gain);
+      card.appendChild(action);
+      card.appendChild(ref);
+      cardsEl.appendChild(card);
     });
   } else {
     document.getElementById('recoSection').style.display = 'none';
@@ -746,22 +770,32 @@ function animateHeart(score, cardioAge, chronoAge, hasUnknowns) {
 
   // Phase 5: Caption and comparison (1800ms)
   setTimeout(() => {
-    let captionText;
-    if (ageDiff <= -5) {
-      captionText = 'Tu corazón es <em>más joven</em> que vos.';
-    } else if (ageDiff <= 0) {
-      captionText = 'Tu corazón está <em>en sintonía</em> con tu edad.';
-    } else if (ageDiff <= 5) {
-      captionText = 'Tu corazón está <em>envejeciendo</em> un poco más rápido.';
-    } else if (ageDiff <= 10) {
-      captionText = 'Tu corazón envejece <em>significativamente</em> más rápido.';
-    } else {
-      captionText = 'Tu corazón necesita <em>atención urgente.</em>';
-    }
-    caption.innerHTML = captionText;
+    // Build caption using safe DOM methods (no innerHTML)
+    caption.textContent = '';
+    const captionParts = (() => {
+      if (ageDiff <= -5) return ['Tu corazón es ', 'más joven', ' que vos.'];
+      if (ageDiff <= 0) return ['Tu corazón está ', 'en sintonía', ' con tu edad.'];
+      if (ageDiff <= 5) return ['Tu corazón está ', 'envejeciendo', ' un poco más rápido.'];
+      if (ageDiff <= 10) return ['Tu corazón envejece ', 'significativamente', ' más rápido.'];
+      return ['Tu corazón necesita ', 'atención urgente.', ''];
+    })();
+    caption.appendChild(document.createTextNode(captionParts[0]));
+    const em = document.createElement('em');
+    em.textContent = captionParts[1];
+    caption.appendChild(em);
+    if (captionParts[2]) caption.appendChild(document.createTextNode(captionParts[2]));
     caption.classList.add('visible');
 
-    vs.innerHTML = `Edad cronológica: <span>${chronoAge}</span> · Edad cardiovascular: <span>${cardioAge}</span>`;
+    // Build age comparison using safe DOM methods (no innerHTML)
+    vs.textContent = '';
+    vs.appendChild(document.createTextNode('Edad cronológica: '));
+    const spanChrono = document.createElement('span');
+    spanChrono.textContent = chronoAge;
+    vs.appendChild(spanChrono);
+    vs.appendChild(document.createTextNode(' · Edad cardiovascular: '));
+    const spanCardio = document.createElement('span');
+    spanCardio.textContent = cardioAge;
+    vs.appendChild(spanCardio);
     vs.classList.add('visible');
 
     const unkWarn = document.getElementById('heartUnknownWarn');
